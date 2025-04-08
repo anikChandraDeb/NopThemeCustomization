@@ -1,0 +1,23 @@
+﻿@model IList<PollModel>
+@if (Model.Count > 0)
+{
+    @* <div class="home-page-polls"> *@
+    @*     <div class="title"> *@
+    @*         <strong>Hello</strong> *@
+    @*     </div> *@
+    @*     @foreach (var poll in Model) *@
+    @*     {  *@
+    @*         @await Html.PartialAsync("_Poll", poll) *@
+    @*     } *@
+    @* </div> *@
+
+	<div style="background-image: url('@(Url.Content("~/Themes/MyFirstTemplate/Content/images/below_banner.png"))');padding:100px 50px;">
+		<h3 style="margin-bottom:5px;color:white;">Stay home & get your daily needs from our shop</h3>
+
+		<p style="margin-bottom:10px;color: white;">Start your daily shopping with Fresh land</p>
+		<button type="button" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button">Subscribe</button>
+		<input id="newsletter-email" class="newsletter-subscribe-text" placeholder="Enter your email here..." aria-label="Sign up for our newsletter" type="email" name="NewsletterEmail">
+	</div>
+
+
+}

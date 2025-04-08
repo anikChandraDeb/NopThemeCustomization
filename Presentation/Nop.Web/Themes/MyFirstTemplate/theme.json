@@ -1,0 +1,7 @@
+﻿{
+  "SystemName": "MyFirstTemplate",
+  "FriendlyName": "My First Template",
+  "SupportRTL": true,
+  "PreviewImageUrl": "~/Themes/MyFirstTemplate/preview.jpg",
+  "PreviewText": "The 'MyFirstTemplate' site theme"
+}

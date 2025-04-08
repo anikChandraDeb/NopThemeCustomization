@@ -1,0 +1,127 @@
+﻿@using Nop.Services.Localization
+@using Nop.Core
+@inject ILocalizationService localizationService
+@inject IStoreContext storeContext
+
+@{
+    Layout = "_ColumnsOne";
+
+    var homepageTitle = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageTitle);
+
+    //title
+    if (!string.IsNullOrEmpty(homepageTitle))
+    {
+        NopHtml.AddTitleParts(homepageTitle);
+    }
+
+    var homepageDescription = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), s => s.HomepageDescription);
+
+    //meta
+    if (!string.IsNullOrEmpty(homepageDescription))
+    {
+        NopHtml.AddMetaDescriptionParts(homepageDescription);
+    }
+
+    //page class
+    NopHtml.AppendPageCssClassParts("html-home-page");
+}
+<div class="page home-page">
+    <div class="page-body">
+		<div class="slider">
+			<div class="slider-left">
+				@await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageTop })
+			</div>
+			<div class="slider-right">
+				<div class="right-content">
+					<div class="right-first-image">
+						<div class="thumb">
+							<div class="inner-content">
+								<h4>Laptop</h4>
+								<span>Best Laptop for Anyone</span>
+							</div>
+							<div class="hover-content">
+								<div class="inner">
+									<h4>Women</h4>
+									<p>Lorem ipsum dolor sit amet, conservisii ctetur adipiscing elit incid.</p>
+									<div class="main-border-button">
+										<a href="#">Discover More</a>
+									</div>
+								</div>
+							</div>
+							<img src="@Url.Content("~/Themes/MyFirstTemplate/Content/images/baner-right-image-01.png")" alt="Women">
+						</div>
+					</div>
+
+					<div class="right-first-image">
+						<div class="thumb">
+							<div class="inner-content">
+								<h4>Accessories</h4>
+								<span>Best Accessories For PC</span>
+							</div>
+							<div class="hover-content">
+								<div class="inner">
+									<h4>Men</h4>
+									<p>Lorem ipsum dolor sit amet, conservisii ctetur adipiscing elit incid.</p>
+									<div class="main-border-button">
+										<a href="#">Discover More</a>
+									</div>
+								</div>
+							</div>
+							<img src="@Url.Content("~/Themes/MyFirstTemplate/Content/images/baner-right-image-02.png")" alt="Men">
+						</div>
+					</div>
+
+					<div class="right-first-image">
+						<div class="thumb">
+							<div class="inner-content">
+								<h4>Iphone</h4>
+								<span>Best Iphone For You</span>
+							</div>
+							<div class="hover-content">
+								<div class="inner">
+									<h4>Kids</h4>
+									<p>Lorem ipsum dolor sit amet, conservisii ctetur adipiscing elit incid.</p>
+									<div class="main-border-button">
+										<a href="#">Discover More</a>
+									</div>
+								</div>
+							</div>
+							<img src="@Url.Content("~/Themes/MyFirstTemplate/Content/images/baner-right-image-03.png")" alt="Kids">
+						</div>
+					</div>
+
+					<div class="right-first-image">
+						<div class="thumb">
+							<div class="inner-content">
+								<h4>Laptop Bags</h4>
+								<span>Best Laptop Bags</span>
+							</div>
+							<div class="hover-content">
+								<div class="inner">
+									<h4>Accessories</h4>
+									<p>Lorem ipsum dolor sit amet, conservisii ctetur adipiscing elit incid.</p>
+									<div class="main-border-button">
+										<a href="#">Discover More</a>
+									</div>
+								</div>
+							</div>
+							<img src="@Url.Content("~/Themes/MyFirstTemplate/Content/images/baner-right-image-04.png")" alt="Accessories">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+        @await Component.InvokeAsync(typeof(TopicBlockViewComponent), new { systemName = "HomepageText" })
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeCategories })
+        @await Component.InvokeAsync(typeof(HomepageCategoriesViewComponent))
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeProducts })
+        @await Component.InvokeAsync(typeof(HomepageProductsViewComponent))
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeBestSellers })
+        @await Component.InvokeAsync(typeof(HomepageBestSellersViewComponent))
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforeNews })
+        @await Component.InvokeAsync(typeof(HomepageNewsViewComponent))
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBeforePoll })
+        @await Component.InvokeAsync(typeof(HomepagePollsViewComponent))
+        @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HomepageBottom })
+    </div>
+</div>
