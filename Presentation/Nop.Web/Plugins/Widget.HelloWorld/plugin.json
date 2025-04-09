@@ -1,0 +1,16 @@
+﻿{
+  "Group": "Widget",
+  "FriendlyName": "Hello World",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "nopCommerce team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widget.HelloWorld.dll",
+  "Description": "Practice plugin.",
+  "LimitedToStores": [],
+  "LimitedToCustomerRoles": [],
+  "DependsOnSystemNames": [],
+  "SystemName": "Widget.HelloWorld",
+  "Version": "4.80.4"
+}

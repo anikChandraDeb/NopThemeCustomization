@@ -1,0 +1,56 @@
+﻿@model List<string>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<h2 style="text-align:center;font-size:30px;color: #444;">Manufacturers</h2>
+<!-- Swiper Slider HTML -->
+<div class="swiper manufacturer-slider">
+	<div class="swiper-wrapper">
+		@foreach (var imageUrl in Model)
+		{
+			<div class="swiper-slide">
+				<div style="padding: 10px; background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+					<img src="@imageUrl" alt="Manufacturer" style="width: 100%; max-height: 150px; object-fit: contain;" />
+				</div>
+			</div>
+		}
+	</div>
+
+	<div class="swiper-button-next"></div>
+	<div class="swiper-button-prev"></div>
+</div>
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+	var swiper = new Swiper('.manufacturer-slider', {
+		loop: true,
+		slidesPerView: 3,
+		spaceBetween: 20,
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev'
+		},
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true
+		},
+		autoplay: {
+			delay: 3000,
+			disableOnInteraction: false
+		},
+		breakpoints: {
+			1024: {
+				slidesPerView: 3
+			},
+			768: {
+				slidesPerView: 2
+			},
+			480: {
+				slidesPerView: 1
+			}
+		}
+	});
+</script>

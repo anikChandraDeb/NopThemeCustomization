@@ -1785,6 +1785,7 @@ label, label + * {
 .item-box .product-title a {
   display: block;
   color:black;
+  font-size:22px;
 }
 
 .item-box .product-title a:hover,
@@ -2114,19 +2115,20 @@ label, label + * {
   padding-top: 100%;
 }
 
-.gallery .picture img,
-.picture-gallery .picture-thumbs img,
-.video-gallery .video-thumbs iframe,
-.variant-picture img {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  max-width: 100%;
-  max-height: 100%;
-  margin: auto;
-}
+  .gallery .picture img,
+  .picture-gallery .picture-thumbs img,
+  .video-gallery .video-thumbs iframe,
+  .variant-picture img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,.5);
+  }
 
 .picture-gallery .picture-thumbs {
   overflow: hidden;
@@ -7013,22 +7015,26 @@ label, label + * {
   .item-box {
     width: 49%;
     margin: 0 0.5% 50px;
+    transition: all 0.1s ease;
   }
-
-  .item-box:nth-child(2n+1) {
-    clear: both;
-  }
+    .item-box:hover {
+      transform: scale(1.04);
+    }
+    .item-box
+    .item-box:nth-child(2n+1) {
+      clear: both;
+    }
 
   .item-box .product-rating-box {
     margin: 0 0 15px;
   }
 
   .item-box .prices {
-    min-height: 40px;
+    min-height: 10px;
   }
 
   .item-box .product-title {
-    min-height: 42px;
+    min-height: 15px;
     margin: 0 0 5px;
   }
 
@@ -7855,7 +7861,7 @@ label, label + * {
 
   .inputs label {
     display: inline-block;
-    width: 265px;
+    width: 99px;
     margin: 0 10px 0 0;
     text-align: right;
   }
@@ -8417,7 +8423,7 @@ label, label + * {
       justify-content:center;
   }
   .button-horizontal .down button{
-      padding: 0 67px;
+      padding: 0 96px;
   }
   /*** PRODUCT PAGE ***/
   .gallery {
@@ -8814,7 +8820,7 @@ label, label + * {
   }
 
   .inputs label {
-    width: 375px;
+    width: 99px;
   }
 
   .center-2 .inputs label {

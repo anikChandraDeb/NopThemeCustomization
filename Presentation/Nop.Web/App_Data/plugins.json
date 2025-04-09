@@ -98,6 +98,14 @@
     {
       "SystemName": "ExternalAuth.Facebook",
       "Version": "4.80.5"
+    },
+    {
+      "SystemName": "Widget.HelloWorld",
+      "Version": "4.80.4"
+    },
+    {
+      "SystemName": "Widget.Manufacturers",
+      "Version": "4.80.4"
     }
   ],
   "PluginNamesToUninstall": [],
