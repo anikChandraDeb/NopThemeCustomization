@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Nop.Plugin.Misc.Supplier.Controllers
 {
-    //[AuthorizeAdmin]
-    //[Area("admin")]
+    [AuthorizeAdmin]
+    [Area("admin")]
 
     public class SupplierController : BasePluginController
     {
@@ -28,7 +28,7 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
             
 
             var suppliers = await _supplierService.GetAllAsync();
-            return View("~/Plugins/Misc.Supplier/Views/Supplier/Index.cshtml", suppliers);
+            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Index.cshtml", suppliers);
         }
 
         public IActionResult Create()
