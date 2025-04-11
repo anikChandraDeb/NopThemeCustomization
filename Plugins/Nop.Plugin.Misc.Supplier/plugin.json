@@ -1,0 +1,13 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Supplier Plugin",
+  "SystemName": "Misc.Supplier",
+  "Version": "4.80.4",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "anik",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Supplier.dll",
+  "Description": "Supplier CRUD Operation etc."
+}

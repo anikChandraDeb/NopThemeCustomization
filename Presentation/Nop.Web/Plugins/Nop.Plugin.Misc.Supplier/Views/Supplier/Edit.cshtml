@@ -1,0 +1,33 @@
+﻿@model Nop.Plugin.Misc.Supplier.Domain.SupplierEntity
+@{
+	Layout = "_AdminLayout";
+	ViewBag.Title = "Edit Supplier";
+}
+
+<h1>Edit Supplier</h1>
+
+<form asp-action="Edit" method="post">
+	<input type="hidden" asp-for="Id" />
+	<div class="form-group">
+		<label asp-for="Name"></label>
+		<input asp-for="Name" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="ContactPerson"></label>
+		<input asp-for="ContactPerson" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Phone"></label>
+		<input asp-for="Phone" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Email"></label>
+		<input asp-for="Email" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="Address"></label>
+		<input asp-for="Address" class="form-control" />
+	</div>
+	<button type="submit" class="btn btn-primary">Save</button>
+	<a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

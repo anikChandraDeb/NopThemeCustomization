@@ -106,9 +106,15 @@
     {
       "SystemName": "Widget.Manufacturers",
       "Version": "4.80.4"
+    },
+    {
+      "SystemName": "Misc.Supplier",
+      "Version": "4.80.4"
     }
   ],
-  "PluginNamesToUninstall": [],
+  "PluginNamesToUninstall": [
+    "Misc.Supplier"
+  ],
   "PluginNamesToDelete": [],
   "PluginNamesToInstall": []
 }

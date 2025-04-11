@@ -1,0 +1,13 @@
+﻿{
+  "Group": "",
+  "FriendlyName": "",
+  "SystemName": "",
+  "Version": "1.00",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "Author Name",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.CustomPlugin1.dll",
+  "Description": ""
+}
