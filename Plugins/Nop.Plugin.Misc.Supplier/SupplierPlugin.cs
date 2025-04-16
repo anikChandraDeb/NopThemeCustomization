@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Nop.Plugin.Misc.Supplier.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Plugins;
 using Nop.Services.Security;
@@ -9,7 +12,7 @@ namespace Nop.Plugin.Misc.Supplier;
 /// <summary>
 /// Rename this file and change to the correct type
 /// </summary>
-public class SupplierPlugin : BasePlugin
+public class SupplierPlugin : BasePlugin, IMiscPlugin
 {
     private readonly IPermissionService _permissionService;
 
@@ -34,6 +37,9 @@ public class SupplierPlugin : BasePlugin
 
         await base.UninstallAsync();
     }
+
+    
+
 
     // Add an event consumer to add a menu item in the admin panel
     public class EventConsumer : IConsumer<AdminMenuCreatedEvent>

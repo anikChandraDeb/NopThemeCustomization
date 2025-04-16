@@ -1,43 +1,54 @@
-﻿@model IList<Nop.Plugin.Misc.Supplier.Domain.SupplierEntity>
+﻿@using Nop.Plugin.Misc.Supplier.Model
+
+@model SupplierSearchModel
 @{
-	Layout = "_AdminLayout";
-	ViewBag.Title = "Supplier List";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	NopHtml.SetActiveMenuItemSystemName("Supplier");
+	ViewBag.PageTitle = T("Admin.Suppliers").Text;
 }
 
 <div class="content-header clearfix">
-	<h1 class="float-left">Suppliers</h1>
+	<h1 class="float-left">@T("Admin.Suppliers")</h1>
 	<div class="float-right">
-		<a class="btn btn-primary" asp-action="Create">Add New Supplier</a>
+		<a asp-action="Create" class="btn btn-primary">
+			<i class="fas fa-plus-square"></i> @T("Admin.Common.AddNew")
+		</a>
 	</div>
 </div>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Contact Person</th>
-			<th>Phone</th>
-			<th>Email</th>
-			<th>Address</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var supplier in Model)
-		{
-			<tr>
-				<td>@supplier.Name</td>
-				<td>@supplier.ContactPerson</td>
-				<td>@supplier.Phone</td>
-				<td>@supplier.Email</td>
-				<td>@supplier.Address</td>
-				<td>
-					<a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@supplier.Id">Edit</a>
-					<form asp-action="Delete" asp-route-id="@supplier.Id" method="post" style="display:inline;">
-						<button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-					</form>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+<section class="content">
+	<div class="container-fluid">
+		<div class="form-horizontal">
+			<div class="cards-group">
+				<div class="card card-default">
+					<div class="card-body">
+						@await Html.PartialAsync("Table", new DataTablesModel
+						{
+							 Name = "suppliers-grid",
+							 UrlRead = new DataUrl("List", "Supplier", null),
+							 SearchButtonId = "",
+							 Length = Model.PageSize,
+							 LengthMenu = Model.AvailablePageSizes,
+							 Filters = null,
+							 ColumnCollection = new List<ColumnProperty>
+							{
+							new ColumnProperty(nameof(SupplierModel.Name)) { Title = T("Admin.Suppliers.Fields.Name").Text },
+							new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = T("Admin.Suppliers.Fields.ContactPerson").Text },
+							new ColumnProperty(nameof(SupplierModel.Phone)) { Title = T("Admin.Suppliers.Fields.Phone").Text },
+							new ColumnProperty(nameof(SupplierModel.Email)) { Title = T("Admin.Suppliers.Fields.Email").Text },
+							new ColumnProperty(nameof(SupplierModel.Address)) { Title = T("Admin.Suppliers.Fields.Address").Text },
+							new ColumnProperty(nameof(SupplierModel.Id))
+							{
+							Title = T("Admin.Common.Edit").Text,
+							ClassName = NopColumnClassDefaults.Button,
+							Width = "80",
+							Render = new RenderButtonEdit(new DataUrl("~/Admin/Supplier/Edit/"))
+							}
+							}
+						})
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
