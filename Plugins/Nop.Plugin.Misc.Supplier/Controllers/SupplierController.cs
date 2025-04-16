@@ -9,6 +9,7 @@ using Nop.Web.Framework.Mvc.Filters;
 using System.Threading.Tasks;
 using Nop.Services.Common;
 using Nop.Core;
+using Nop.Plugin.Misc.Supplier.Factories;
 
 namespace Nop.Plugin.Misc.Supplier.Controllers
 {
@@ -19,11 +20,16 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
     {
         private readonly ISupplierService _supplierService;
         private readonly IPermissionService _permissionService;
+        private readonly ISupplierModelFactory _supplierModelFactory;
 
-        public SupplierController(ISupplierService supplierService, IPermissionService permissionService)
+        public SupplierController(
+            ISupplierService supplierService,
+            IPermissionService permissionService,
+            ISupplierModelFactory supplierModelFactory)
         {
             _supplierService = supplierService;
             _permissionService = permissionService;
+            _supplierModelFactory = supplierModelFactory;
         }
 
 
@@ -31,39 +37,19 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
         public async Task<IActionResult> Index()
         {
             var model = new SupplierSearchModel();
+
+            model.SetGridPageSize();
+
             return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Index.cshtml", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> List(SupplierSearchModel searchModel)
         {
-            // Get paginated suppliers from service
-            var suppliers = await _supplierService.GetAllAsync(
-                searchModel.SearchName,
-                searchModel.SearchEmail,
-                searchModel.Page - 1,
-                searchModel.PageSize
-            );
-
-            // Convert domain models to view models
-            var supplierModels = suppliers.Select(s => new SupplierModel
-            {
-                Id = s.Id,
-                Name = s.Name,
-                ContactPerson = s.ContactPerson,
-                Phone = s.Phone,
-                Email = s.Email,
-                Address = s.Address
-            }).ToList();
-
-            // Prepare the result in the format Nop's DataTables expects
-            var model = new SupplierListModel
-            {
-                Data = supplierModels
-            };
-
+            var model = await _supplierModelFactory.PrepareSupplierListModelAsync(searchModel);
             return Json(model);
         }
+
 
 
 

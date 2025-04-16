@@ -12,6 +12,4 @@ public record SupplierSearchModel : BaseSearchModel
 {
     public string SearchName { get; set; }
     public string SearchEmail { get; set; }
-
-    public IPagedList<SupplierModel> Suppliers { get; set; }
 }

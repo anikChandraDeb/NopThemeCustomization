@@ -7,9 +7,9 @@ using Nop.Web.Framework.Models;
 
 namespace Nop.Plugin.Misc.Supplier.Model;
 // Change SupplierModel to a record to match the inheritance requirement of BaseNopModel  
-public record SupplierModel : BaseNopModel
+public record SupplierModel : BaseNopEntityModel
 {
-    public int Id { get; set; }
+    
     public string Name { get; set; }
     public string ContactPerson { get; set; }
     public string Phone { get; set; }

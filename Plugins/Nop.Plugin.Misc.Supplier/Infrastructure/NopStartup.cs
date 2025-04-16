@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Misc.Supplier.Factories;
 using Nop.Plugin.Misc.Supplier.Services;
 
 namespace Nop.Plugin.Misc.Supplier.Infrastructure
@@ -11,6 +12,7 @@ namespace Nop.Plugin.Misc.Supplier.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddScoped<ISupplierModelFactory, SupplierModelFactory>(); // Register your ISupplierModelFactory
         }
 
         public void Configure(IApplicationBuilder application) { }

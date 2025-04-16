@@ -1,6 +1,7 @@
 ﻿@using Nop.Plugin.Misc.Supplier.Model
 
 @model SupplierSearchModel
+
 @{
 	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 	NopHtml.SetActiveMenuItemSystemName("Supplier");
@@ -26,24 +27,17 @@
 						{
 							 Name = "suppliers-grid",
 							 UrlRead = new DataUrl("List", "Supplier", null),
-							 SearchButtonId = "",
+							 SearchButtonId = "search-suppliers",
 							 Length = Model.PageSize,
 							 LengthMenu = Model.AvailablePageSizes,
-							 Filters = null,
+
 							 ColumnCollection = new List<ColumnProperty>
 							{
-							new ColumnProperty(nameof(SupplierModel.Name)) { Title = T("Admin.Suppliers.Fields.Name").Text },
-							new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = T("Admin.Suppliers.Fields.ContactPerson").Text },
-							new ColumnProperty(nameof(SupplierModel.Phone)) { Title = T("Admin.Suppliers.Fields.Phone").Text },
-							new ColumnProperty(nameof(SupplierModel.Email)) { Title = T("Admin.Suppliers.Fields.Email").Text },
-							new ColumnProperty(nameof(SupplierModel.Address)) { Title = T("Admin.Suppliers.Fields.Address").Text },
-							new ColumnProperty(nameof(SupplierModel.Id))
-							{
-							Title = T("Admin.Common.Edit").Text,
-							ClassName = NopColumnClassDefaults.Button,
-							Width = "80",
-							Render = new RenderButtonEdit(new DataUrl("~/Admin/Supplier/Edit/"))
-							}
+							new ColumnProperty(nameof(SupplierModel.Name)) { Title = "Name" },
+							new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = "Contact Person" },
+							new ColumnProperty(nameof(SupplierModel.Phone)) { Title = "Phone" },
+							new ColumnProperty(nameof(SupplierModel.Email)) { Title = "Email" },
+							new ColumnProperty(nameof(SupplierModel.Address)) { Title = "Address" }
 							}
 						})
 					</div>
