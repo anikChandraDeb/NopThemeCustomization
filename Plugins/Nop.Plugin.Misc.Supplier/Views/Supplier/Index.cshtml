@@ -6,10 +6,13 @@
 	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 	NopHtml.SetActiveMenuItemSystemName("Supplier");
 	ViewBag.PageTitle = T("Admin.Suppliers").Text;
+
+	const string hideSearchBlockAttributeName = "SuppliersPage.HideSearchBlock";
+	var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
 }
 
 <div class="content-header clearfix">
-	<h1 class="float-left">@T("Admin.Suppliers")</h1>
+	<h1 class="float-left">Suppliers</h1>
 	<div class="float-right">
 		<a asp-action="Create" class="btn btn-primary">
 			<i class="fas fa-plus-square"></i> @T("Admin.Common.AddNew")
@@ -21,25 +24,82 @@
 	<div class="container-fluid">
 		<div class="form-horizontal">
 			<div class="cards-group">
+				<!-- Search Panel -->
+				<div class="card card-default card-search">
+					<div class="card-body">
+						<div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+							<div class="search-text">@T("Admin.Common.Search")</div>
+							<div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+							<div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+						</div>
+
+						<div class="search-body @(hideSearchBlock ? "closed" : "")">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<div class="col-md-4">
+											<nop-label asp-for="SearchName" />
+										</div>
+										<div class="col-md-8">
+											<nop-editor asp-for="SearchName" />
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group row">
+										<div class="col-md-4">
+											<nop-label asp-for="SearchEmail" />
+										</div>
+										<div class="col-md-8">
+											<nop-editor asp-for="SearchEmail" />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="text-center col-12">
+									<button type="button" id="search-suppliers" class="btn btn-primary btn-search">
+										<i class="fas fa-magnifying-glass"></i> @T("Admin.Common.Search")
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Grid Panel -->
 				<div class="card card-default">
 					<div class="card-body">
 						@await Html.PartialAsync("Table", new DataTablesModel
+ {
+	 Name = "suppliers-grid",
+	 UrlRead = new DataUrl("List", "Supplier", null),
+	 SearchButtonId = "search-suppliers",
+	 Length = Model.PageSize,
+	 LengthMenu = Model.AvailablePageSizes,
+	 Filters = new List<FilterParameter>
 						{
-							 Name = "suppliers-grid",
-							 UrlRead = new DataUrl("List", "Supplier", null),
-							 SearchButtonId = "search-suppliers",
-							 Length = Model.PageSize,
-							 LengthMenu = Model.AvailablePageSizes,
-
-							 ColumnCollection = new List<ColumnProperty>
-							{
-							new ColumnProperty(nameof(SupplierModel.Name)) { Title = "Name" },
-							new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = "Contact Person" },
-							new ColumnProperty(nameof(SupplierModel.Phone)) { Title = "Phone" },
-							new ColumnProperty(nameof(SupplierModel.Email)) { Title = "Email" },
-							new ColumnProperty(nameof(SupplierModel.Address)) { Title = "Address" }
-							}
-						})
+						new FilterParameter(nameof(Model.SearchName)),
+						new FilterParameter(nameof(Model.SearchEmail))
+						},
+	 ColumnCollection = new List<ColumnProperty>
+						{
+						new ColumnProperty(nameof(SupplierModel.Name)) { Title = "Name" },
+						new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = "Contact Person" },
+						new ColumnProperty(nameof(SupplierModel.Phone)) { Title = "Phone" },
+						new ColumnProperty(nameof(SupplierModel.Email)) { Title = "Email" },
+						new ColumnProperty(nameof(SupplierModel.Address)) { Title = "Address" },
+						new ColumnProperty(nameof(SupplierModel.Id))
+						{
+						Title = T("Admin.Common.Edit").Text,
+						Width = "50",
+						ClassName =  NopColumnClassDefaults.Button,
+						Render = new RenderButtonEdit(new DataUrl("~/Admin/Supplier/Edit"))
+						}
+						}
+ })
 					</div>
 				</div>
 			</div>
