@@ -1,36 +1,35 @@
-﻿@model Nop.Plugin.Misc.Supplier.Domain.SupplierEntity
+﻿@model SupplierModel
+
 @{
-	Layout = "_AdminLayout";
-	ViewBag.Title = "Edit Supplier";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	ViewBag.PageTitle = T("Admin.Suppliers.EditSupplierDetails").Text;
+	NopHtml.SetActiveMenuItemSystemName("Suppliers");
 }
 
-<h1>Edit Supplier</h1>
-
-<div class="p-5">
-
-	<form asp-action="Edit" method="post">
-		<input type="hidden" asp-for="Id" />
-		<div class="form-group">
-			<label asp-for="Name"></label>
-			<input asp-for="Name" class="form-control" />
+<form asp-controller="Supplier" asp-action="Edit" method="post">
+	<div class="content-header clearfix">
+		<h1 class="float-left">
+			@T("Admin.Suppliers.EditSupplierDetails") - @Model.Name
+			<small>
+				<i class="fas fa-arrow-circle-left"></i>
+				<a asp-action="Index">@T("Admin.Suppliers.BackToList")</a>
+			</small>
+		</h1>
+		<div class="float-right">
+			<button type="submit" name="save" class="btn btn-primary">
+				<i class="far fa-floppy-disk"></i>
+				@T("Admin.Common.Save")
+			</button>
+			<button type="submit" name="save-continue" class="btn btn-primary">
+				<i class="far fa-floppy-disk"></i>
+				@T("Admin.Common.SaveContinue")
+			</button>
+			<span id="supplier-delete" class="btn btn-danger">
+				<i class="far fa-trash-can"></i>
+				@T("Admin.Common.Delete")
+			</span>
 		</div>
-		<div class="form-group">
-			<label asp-for="ContactPerson"></label>
-			<input asp-for="ContactPerson" class="form-control" />
-		</div>
-		<div class="form-group">
-			<label asp-for="Phone"></label>
-			<input asp-for="Phone" class="form-control" />
-		</div>
-		<div class="form-group">
-			<label asp-for="Email"></label>
-			<input asp-for="Email" class="form-control" />
-		</div>
-		<div class="form-group">
-			<label asp-for="Address"></label>
-			<input asp-for="Address" class="form-control" />
-		</div>
-		<button type="submit" class="btn btn-primary">Save</button>
-		<a asp-action="Index" class="btn btn-secondary">Cancel</a>
-	</form>
-</div>
+	</div>
+	@await Html.PartialAsync("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="supplier-delete" />

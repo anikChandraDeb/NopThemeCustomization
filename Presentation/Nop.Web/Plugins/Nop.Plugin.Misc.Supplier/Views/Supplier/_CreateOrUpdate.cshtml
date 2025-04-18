@@ -1,0 +1,22 @@
+﻿@model SupplierModel
+
+@{
+	const string hideInfoBlockAttributeName = "SupplierPage.HideInfoBlock";
+	var customer = await workContext.GetCurrentCustomerAsync();
+	var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideInfoBlockAttributeName);
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+	<div class="container-fluid">
+		<div class="form-horizontal">
+			<nop-cards id="supplier-cards">
+				<nop-card asp-name="supplier-info" asp-icon="fas fa-info" asp-title="@T("Admin.Suppliers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+					@await Html.PartialAsync("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/_CreateOrUpdate.Info.cshtml", Model)
+				</nop-card>
+			</nop-cards>
+		</div>
+	</div>
+</section>

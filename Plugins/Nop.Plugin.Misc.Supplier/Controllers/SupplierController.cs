@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using Nop.Services.Common;
 using Nop.Core;
 using Nop.Plugin.Misc.Supplier.Factories;
+using Nop.Core.Domain.Vendors;
+using Nop.Services.Messages;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.Misc.Supplier.Controllers
 {
@@ -21,15 +24,21 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
         private readonly ISupplierService _supplierService;
         private readonly IPermissionService _permissionService;
         private readonly ISupplierModelFactory _supplierModelFactory;
+        protected readonly INotificationService _notificationService;
+        private readonly ILocalizationService _localizationService;
 
         public SupplierController(
             ISupplierService supplierService,
             IPermissionService permissionService,
-            ISupplierModelFactory supplierModelFactory)
+            ISupplierModelFactory supplierModelFactory,
+            INotificationService notificationService,
+            ILocalizationService localizationService)
         {
             _supplierService = supplierService;
             _permissionService = permissionService;
             _supplierModelFactory = supplierModelFactory;
+            _notificationService = notificationService;
+            _localizationService = localizationService;
         }
 
 
@@ -58,43 +67,91 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
 
         public IActionResult Create()
         {
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml");
+            var model = new SupplierModel(); // Initialize an empty SupplierModel
+            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml", model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(SupplierEntity supplier)
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [FormValueRequired("save", "save-continue")]
+        public async Task<IActionResult> Create(SupplierModel model, bool continueEditing)
         {
-            if (ModelState.IsValid)
+            try
             {
-                await _supplierService.InsertAsync(supplier);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid && !String.IsNullOrEmpty(model.Name))
+                {
+                    var supplierEntity = _supplierModelFactory.PrepareEntity(model);    
+
+                    // Insert the new Supplier into the database
+                    await _supplierService.InsertAsync(supplierEntity);
+
+                    _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Supplier.Added"));
+
+                    if (!continueEditing)
+                        return RedirectToAction("Index");
+
+                    return RedirectToAction("Edit", new { id = supplierEntity.Id });
+                } 
+                // If the model state is not valid, return the same view with the current model
+                return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml", model);
+            }catch(Exception e)
+            {
+                throw (e);
             }
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml", supplier);
+
+           
         }
 
+
+        // GET: Supplier/Edit/{id}
         public async Task<IActionResult> Edit(int id)
         {
-            var supplier = await _supplierService.GetByIdAsync(id);
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", supplier);
+            // Fetch the SupplierEntity by ID
+            var supplierEntity = await _supplierService.GetByIdAsync(id);
+
+            if (supplierEntity == null)
+            {
+                // Handle case where supplier is not found (e.g., 404)
+                return NotFound();
+            }
+
+            // SupplierEntity to SupplierModel
+            var supplierModel = _supplierModelFactory.PrepareModel(supplierEntity);
+
+            // Return the Edit view with the SupplierModel
+            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", supplierModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(SupplierEntity supplier)
+        // POST: Supplier/Edit/{id}
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public async Task<IActionResult> Edit(SupplierModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
-                await _supplierService.UpdateAsync(supplier);
-                return RedirectToAction("Index");
+                var supplierEntity = _supplierModelFactory.PrepareEntity(model);
+
+                // Update the SupplierEntity in the database
+                await _supplierService.UpdateAsync(supplierEntity);
+
+                _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Updated"));
+
+
+                if (!continueEditing)
+                    return RedirectToAction("Index");
+
+                return RedirectToAction("Edit", new { id = supplierEntity.Id });
             }
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", supplier);
+
+            // If the model state is invalid, return the Edit view with the model data
+            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var supplier = await _supplierService.GetByIdAsync(id);
-            if (supplier != null)
-                await _supplierService.DeleteAsync(supplier);
+            var supplierEntity = await _supplierService.GetByIdAsync(id);
+            if (supplierEntity != null)
+                await _supplierService.DeleteAsync(supplierEntity);
 
             return RedirectToAction("Index");
         }
