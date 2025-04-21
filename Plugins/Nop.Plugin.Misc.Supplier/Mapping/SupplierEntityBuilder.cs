@@ -14,7 +14,10 @@ namespace Nop.Plugin.Misc.Supplier.Mapping
                 .WithColumn(nameof(SupplierEntity.ContactPerson)).AsString(200).Nullable()
                 .WithColumn(nameof(SupplierEntity.Phone)).AsString(100).Nullable()
                 .WithColumn(nameof(SupplierEntity.Email)).AsString(200).Nullable()
-                .WithColumn(nameof(SupplierEntity.Address)).AsString(1000).Nullable();
+                .WithColumn(nameof(SupplierEntity.Address)).AsString(1000).Nullable()
+                .WithColumn(nameof(SupplierEntity.Description)).AsString(250).Nullable() 
+                .WithColumn(nameof(SupplierEntity.IsActive)).AsBoolean().NotNullable().WithDefaultValue(true); 
         }
     }
+
 }

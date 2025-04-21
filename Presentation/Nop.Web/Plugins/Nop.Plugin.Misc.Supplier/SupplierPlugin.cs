@@ -10,6 +10,7 @@ using Nop.Web.Framework.Menu;
 using Nop.Services.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using System.Globalization;
 
 namespace Nop.Plugin.Misc.Supplier;
 /// <summary>
@@ -42,6 +43,17 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin
             ["Admin.Suppliers.Backtolist"]="back to supplier list",
             ["Admin.Supplier.Added"] ="Supplier Added Successfully",
             ["Admin.Vendors.Updated"]="Supplier Updated Successfully",
+
+            //Required
+            ["Admin.Suppliers.Fields.Name.Required"] = "Supplier name is required",
+            ["Admin.Suppliers.Fields.Email.Required"] = "Not a Valid Email",
+            ["Admin.Suppliers.Fields.Phone.Required"] = "Supplier phone is required",
+            ["Admin.Suppliers.Fields.Address.Required"] = "Supplier address is required",
+            ["Admin.Suppliers.Fields.Description.Required"] = "Supplier description is required",
+            ["Admin.Common.WrongEmail"] ="Wrong Email",
+            ["Admin.Common.WrongPhone"]="Enter Bangladeshi Phone Number",
+            ["Admin.Common.ExitDescriptionLength"] = "Description length should be less than 250 characters",
+
             // Search fields
             ["Admin.Suppliers.List.SearchName"] = "Supplier Name",
             ["Admin.Suppliers.List.SearchName.Hint"] = "Search suppliers by their name.",
@@ -62,7 +74,13 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin
             ["Admin.Suppliers.Fields.Email.Hint"] = "Enter the supplier's email address.",
 
             ["Admin.Suppliers.Fields.Address"] = "Address",
-            ["Admin.Suppliers.Fields.Address.Hint"] = "Enter the full address of the supplier."
+            ["Admin.Suppliers.Fields.Address.Hint"] = "Enter the full address of the supplier.",
+
+            ["Admin.Suppliers.Fields.Description"]="Description",
+            ["Admin.Suppliers.Fields.Description.Hint"]="Enter the supplier's description",
+
+            ["Admin.Suppliers.Fields.IsActive"] ="Active Status",
+            ["Admin.Suppliers.Fields.IsActive.Hint"] ="Enter the supplier's active status"
         };
 
         await _localizationService.AddOrUpdateLocaleResourceAsync(resources);
@@ -112,7 +130,20 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin
 
 
 
+    public override async Task UpdateAsync(string currentVersion, string targetVersion)
+    {
+        var current = Version.Parse(currentVersion);
+        var target = Version.Parse(targetVersion);
 
+        if (current < target)
+        {
+            //update here
+            await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
+            {
+                ["Admin.Suppliers.Fields.ContactPerson.Required"] = "Contact Person is Required!"
+            });
+        }
+    }
 
 
     // Add an event consumer to add a menu item in the admin panel

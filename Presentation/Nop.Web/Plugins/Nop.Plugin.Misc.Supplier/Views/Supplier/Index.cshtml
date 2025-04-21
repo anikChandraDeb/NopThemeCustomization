@@ -88,16 +88,22 @@
 						ColumnCollection = new List<ColumnProperty>
 						{
 						new ColumnProperty(nameof(SupplierModel.Name)) { Title = T("Admin.Suppliers.Fields.Name").Text },
+						new ColumnProperty(nameof(SupplierModel.Description)) { Title = T("Admin.Suppliers.Fields.Description").Text },
 						new ColumnProperty(nameof(SupplierModel.ContactPerson)) { Title = T("Admin.Suppliers.Fields.ContactPerson").Text },
 						new ColumnProperty(nameof(SupplierModel.Phone)) { Title = T("Admin.Suppliers.Fields.Phone").Text },
 						new ColumnProperty(nameof(SupplierModel.Email)) { Title = T("Admin.Suppliers.Fields.Email").Text },
 						new ColumnProperty(nameof(SupplierModel.Address)) { Title = T("Admin.Suppliers.Fields.Address").Text },
+						new ColumnProperty(nameof(SupplierModel.IsActive))
+						{
+							Title = T("Admin.Suppliers.Fields.IsActive").Text,
+							Render = new RenderBoolean() // shows true/false as Yes/No icons
+						},
 						new ColumnProperty(nameof(SupplierModel.Id))
 						{
-						Title = T("Admin.Common.Edit").Text,
-						Width = "50",
-						ClassName =  NopColumnClassDefaults.Button,
-						Render = new RenderButtonEdit(new DataUrl("~/Admin/Supplier/Edit"))
+							Title = T("Admin.Common.Edit").Text,
+							Width = "50",
+							ClassName =  NopColumnClassDefaults.Button,
+							Render = new RenderButtonEdit(new DataUrl("~/Admin/Supplier/Edit"))
 						}
 						}
 						})

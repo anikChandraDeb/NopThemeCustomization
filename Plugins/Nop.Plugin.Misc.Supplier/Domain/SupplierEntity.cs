@@ -9,5 +9,8 @@ namespace Nop.Plugin.Misc.Supplier.Domain
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
+        public string Description { get; set; } 
+        public bool IsActive { get; set; }      
     }
+
 }

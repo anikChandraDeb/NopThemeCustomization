@@ -25,6 +25,12 @@ public record SupplierModel : BaseNopEntityModel, ILocalizedModel<SupplierLocali
     [NopResourceDisplayName("Admin.Suppliers.Fields.Address")]
     public string Address { get; set; }
 
+    [NopResourceDisplayName("Admin.Suppliers.Fields.Description")]
+    public string Description { get; set; } 
+
+    [NopResourceDisplayName("Admin.Suppliers.Fields.IsActive")]
+    public bool IsActive { get; set; } 
+
     public IList<SupplierLocalizedModel> Locales { get; set; }
 
     public SupplierModel()
@@ -32,3 +38,4 @@ public record SupplierModel : BaseNopEntityModel, ILocalizedModel<SupplierLocali
         Locales = new List<SupplierLocalizedModel>();
     }
 }
+

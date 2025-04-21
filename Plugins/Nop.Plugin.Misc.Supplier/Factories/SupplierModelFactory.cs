@@ -16,6 +16,7 @@ namespace Nop.Plugin.Misc.Supplier.Factories
         {
             _supplierService = supplierService;
         }
+
         public SupplierEntity PrepareEntity(SupplierModel model)
         {
             return new SupplierEntity
@@ -25,7 +26,9 @@ namespace Nop.Plugin.Misc.Supplier.Factories
                 ContactPerson = model.ContactPerson,
                 Phone = model.Phone,
                 Email = model.Email,
-                Address = model.Address
+                Address = model.Address,
+                Description = model.Description,  // New property
+                IsActive = model.IsActive         // New property
             };
         }
 
@@ -38,9 +41,12 @@ namespace Nop.Plugin.Misc.Supplier.Factories
                 ContactPerson = entity.ContactPerson,
                 Phone = entity.Phone,
                 Email = entity.Email,
-                Address = entity.Address
+                Address = entity.Address,
+                Description = entity.Description, // New property
+                IsActive = entity.IsActive        // New property
             };
         }
+
         public async Task<SupplierListModel> PrepareSupplierListModelAsync(SupplierSearchModel searchModel)
         {
             var suppliers = await _supplierService.GetAllAsync(
@@ -59,11 +65,14 @@ namespace Nop.Plugin.Misc.Supplier.Factories
                     ContactPerson = supplier.ContactPerson,
                     Phone = supplier.Phone,
                     Email = supplier.Email,
-                    Address = supplier.Address
+                    Address = supplier.Address,
+                    Description = supplier.Description, // New property
+                    IsActive = supplier.IsActive        // New property
                 }).ToAsyncEnumerable();
             });
 
             return model;
         }
     }
+
 }
