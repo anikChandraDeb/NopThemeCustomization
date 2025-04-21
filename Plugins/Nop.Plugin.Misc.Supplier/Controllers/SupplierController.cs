@@ -13,6 +13,8 @@ using Nop.Plugin.Misc.Supplier.Factories;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Messages;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Factories;
+using System.Text.RegularExpressions;
 
 namespace Nop.Plugin.Misc.Supplier.Controllers
 {
@@ -26,19 +28,25 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
         private readonly ISupplierModelFactory _supplierModelFactory;
         protected readonly INotificationService _notificationService;
         private readonly ILocalizationService _localizationService;
-
+        private readonly ILocalizedModelFactory _localizedModelFactory;
+        private readonly ILocalizedEntityService _localizedEntityService;
         public SupplierController(
             ISupplierService supplierService,
             IPermissionService permissionService,
             ISupplierModelFactory supplierModelFactory,
             INotificationService notificationService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ILocalizedModelFactory localizedModelFactory,
+            ILocalizedEntityService localizedEntityService
+            )
         {
             _supplierService = supplierService;
             _permissionService = permissionService;
             _supplierModelFactory = supplierModelFactory;
             _notificationService = notificationService;
             _localizationService = localizationService;
+            _localizedModelFactory = localizedModelFactory;
+            _localizedEntityService = localizedEntityService;
         }
 
 
@@ -60,16 +68,19 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
         }
 
 
-
-
-
-
-
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var model = new SupplierModel(); // Initialize an empty SupplierModel
+            var model = new SupplierModel();
+
+            model.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync<SupplierLocalizedModel>(
+                async (locale, languageId) =>
+                {
+                    locale.LanguageId = languageId;
+                });
+
             return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml", model);
         }
+
 
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
@@ -80,10 +91,18 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
             {
                 if (ModelState.IsValid && !String.IsNullOrEmpty(model.Name))
                 {
+                    model.Description = StripPTags(model.Description);
+
                     var supplierEntity = _supplierModelFactory.PrepareEntity(model);    
 
-                    // Insert the new Supplier into the database
                     await _supplierService.InsertAsync(supplierEntity);
+
+                    foreach (var localized in model.Locales)
+                    {
+                        await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Name, localized.Name, localized.LanguageId);
+                        await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Address, localized.Address, localized.LanguageId);
+                        await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Description, localized.Description, localized.LanguageId);
+                    }
 
                     _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Supplier.Added"));
 
@@ -92,7 +111,7 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
 
                     return RedirectToAction("Edit", new { id = supplierEntity.Id });
                 } 
-                // If the model state is not valid, return the same view with the current model
+                
                 return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Create.cshtml", model);
             }catch(Exception e)
             {
@@ -102,36 +121,49 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
            
         }
 
-
-        // GET: Supplier/Edit/{id}
         public async Task<IActionResult> Edit(int id)
         {
-            // Fetch the SupplierEntity by ID
             var supplierEntity = await _supplierService.GetByIdAsync(id);
 
             if (supplierEntity == null)
             {
-                // Handle case where supplier is not found (e.g., 404)
                 return NotFound();
             }
 
-            // SupplierEntity to SupplierModel
             var supplierModel = _supplierModelFactory.PrepareModel(supplierEntity);
 
-            // Return the Edit view with the SupplierModel
+            supplierModel.Locales = await _localizedModelFactory.PrepareLocalizedModelsAsync<SupplierLocalizedModel>(
+            async (locale, languageId) =>
+            {
+                locale.LanguageId = languageId;
+                locale.Name = await _localizationService.GetLocalizedAsync(supplierEntity, x => x.Name, languageId, false, false);
+                locale.Description = await _localizationService.GetLocalizedAsync(supplierEntity, x => x.Description, languageId, false, false);
+
+            });
+
             return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", supplierModel);
         }
 
-        // POST: Supplier/Edit/{id}
+
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public async Task<IActionResult> Edit(SupplierModel model, bool continueEditing)
         {
             if (ModelState.IsValid)
             {
+                model.Description = StripPTags(model.Description);
+
                 var supplierEntity = _supplierModelFactory.PrepareEntity(model);
 
-                // Update the SupplierEntity in the database
+                
                 await _supplierService.UpdateAsync(supplierEntity);
+
+                
+                foreach (var localized in model.Locales)
+                {
+                    await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Name, localized.Name, localized.LanguageId);
+                    await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Address, localized.Address, localized.LanguageId);
+                    await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Description, localized.Description, localized.LanguageId);
+                }
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Updated"));
 
@@ -142,7 +174,7 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
                 return RedirectToAction("Edit", new { id = supplierEntity.Id });
             }
 
-            // If the model state is invalid, return the Edit view with the model data
+            
             return View("~/Plugins/Nop.Plugin.Misc.Supplier/Views/Supplier/Edit.cshtml", model);
         }
 
@@ -154,6 +186,15 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
                 await _supplierService.DeleteAsync(supplierEntity);
 
             return RedirectToAction("Index");
+        }
+
+        public static string StripPTags(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            // Remove wrapping <p> and </p> tags only
+            return Regex.Replace(input, @"^<p>(.*?)</p>$", "$1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         }
     }
 }

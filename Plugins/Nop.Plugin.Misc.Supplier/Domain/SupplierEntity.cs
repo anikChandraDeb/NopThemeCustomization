@@ -1,8 +1,9 @@
 ﻿using Nop.Core;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Plugin.Misc.Supplier.Domain
 {
-    public class SupplierEntity : BaseEntity
+    public class SupplierEntity : BaseEntity, ILocalizedEntity
     {
         public string Name { get; set; }
         public string ContactPerson { get; set; }

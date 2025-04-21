@@ -12,7 +12,7 @@ namespace Nop.Plugin.Misc.Supplier.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ISupplierService, SupplierService>();
-            services.AddScoped<ISupplierModelFactory, SupplierModelFactory>(); // Register your ISupplierModelFactory
+            services.AddScoped<ISupplierModelFactory, SupplierModelFactory>(); 
         }
 
         public void Configure(IApplicationBuilder application) { }

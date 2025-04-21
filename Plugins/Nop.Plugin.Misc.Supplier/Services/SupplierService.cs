@@ -24,7 +24,7 @@ namespace Nop.Plugin.Misc.Supplier.Services
         {
             var query = _repository.Table;
 
-            // Apply filters if the name or email is provided
+            //  filters by name then email
             if (!string.IsNullOrEmpty(name))
                 query = query.Where(s => s.Name.Contains(name));
 
@@ -32,7 +32,7 @@ namespace Nop.Plugin.Misc.Supplier.Services
                 query = query.Where(s => s.Email.Contains(email));
 
             // Apply pagination and ordering
-            query = query.OrderBy(s => s.Name); // Change this to another field if necessary
+            query = query.OrderBy(s => s.Name); 
 
             // Return the paginated list using the ToPagedList method
             return await query.ToPagedListAsync(pageIndex, pageSize);

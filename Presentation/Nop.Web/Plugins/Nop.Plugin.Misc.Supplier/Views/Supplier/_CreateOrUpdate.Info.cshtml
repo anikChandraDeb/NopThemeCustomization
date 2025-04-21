@@ -3,6 +3,8 @@
 <div class="card-body">
 	@(await Html.LocalizedEditorAsync<SupplierModel, SupplierLocalizedModel>("supplier-info-localized",
 	@<div>
+		<input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+
 		<div class="form-group row">
 			<div class="col-md-3">
 				<nop-label asp-for="@Model.Locales[item].Name" />
@@ -10,6 +12,16 @@
 			<div class="col-md-9">
 				<nop-editor asp-for="@Model.Locales[item].Name" />
 				<span asp-validation-for="@Model.Locales[item].Name"></span>
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<div class="col-md-3">
+				<nop-label asp-for="@Model.Locales[item].Description" />
+			</div>
+			<div class="col-md-9">
+				<nop-editor asp-for="@Model.Locales[item].Description" asp-template="RichEditor" />
+				<span asp-validation-for="@Model.Locales[item].Description"></span>
 			</div>
 		</div>
 	</div>,
@@ -23,7 +35,6 @@
 				<span asp-validation-for="Name"></span>
 			</div>
 		</div>
-
 		<div class="form-group row">
 			<div class="col-md-3">
 				<nop-label asp-for="Description" />
@@ -33,56 +44,58 @@
 				<span asp-validation-for="Description"></span>
 			</div>
 		</div>
-
-		<div class="form-group row">
-			<div class="col-md-3">
-				<nop-label asp-for="ContactPerson" />
-			</div>
-			<div class="col-md-9">
-				<nop-editor asp-for="ContactPerson" />
-				<span asp-validation-for="ContactPerson"></span>
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<div class="col-md-3">
-				<nop-label asp-for="Phone" />
-			</div>
-			<div class="col-md-9">
-				<nop-editor asp-for="Phone" />
-				<span asp-validation-for="Phone"></span>
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<div class="col-md-3">
-				<nop-label asp-for="Email" />
-			</div>
-			<div class="col-md-9">
-				<nop-editor asp-for="Email" />
-				<span asp-validation-for="Email"></span>
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<div class="col-md-3">
-				<nop-label asp-for="Address" />
-			</div>
-			<div class="col-md-9">
-				<nop-textarea asp-for="Address" />
-				<span asp-validation-for="Address"></span>
-			</div>
-		</div>
-
-		<div class="form-group row">
-			<div class="col-md-3">
-				<nop-label asp-for="IsActive" />
-			</div>
-			<div class="col-md-9">
-				<nop-editor asp-for="IsActive" />
-				<span asp-validation-for="IsActive"></span>
-			</div>
-		</div>
-
 	</div>))
+	
+
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="ContactPerson" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="ContactPerson" />
+			<span asp-validation-for="ContactPerson"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="Phone" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="Phone" />
+			<span asp-validation-for="Phone"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="Email" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="Email" />
+			<span asp-validation-for="Email"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="Address" />
+		</div>
+		<div class="col-md-9">
+			<nop-textarea asp-for="Address" />
+			<span asp-validation-for="Address"></span>
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="IsActive" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="IsActive" />
+			<span asp-validation-for="IsActive"></span>
+		</div>
+	</div>
+
+	
 </div>
