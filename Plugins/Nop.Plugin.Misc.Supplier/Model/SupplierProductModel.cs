@@ -12,8 +12,8 @@ namespace Nop.Plugin.Misc.Supplier.Model;
 // Change the class to a record to fix CS8865
 public record SupplierProductModel
 {
-    public int SelectedSupplierId { get; set; }
-    public List<SelectListItem> Suppliers { get; set; } = new();
+    public int ProductId { get; set; }
+    public IList<Domain.SupplierEntity> Suppliers { get; set; }
 }
 
 

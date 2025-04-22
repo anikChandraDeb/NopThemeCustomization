@@ -188,6 +188,19 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AssignSupplierToProduct(int productId, int supplierId)
+        {
+            if (productId == 0 || supplierId == 0)
+                return Json(new { success = false, message = "Invalid product or supplier ID" });
+
+            await _supplierService.InsertOrUpdateProductSupplierMappingAsync(productId, supplierId);
+
+            return Json(new { success = true, message = "Supplier added to product successfully." });
+        }
+
+
+
         public static string StripPTags(string input)
         {
             if (string.IsNullOrEmpty(input))

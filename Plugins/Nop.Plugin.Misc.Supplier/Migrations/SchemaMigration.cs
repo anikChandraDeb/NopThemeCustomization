@@ -11,6 +11,7 @@ namespace Nop.Plugin.Misc.Supplier.Migrations
         public override void Up()
         {
             Create.TableFor<SupplierEntity>();
+            Create.TableFor<ProductSupplierMapping>();
         }
     }
 }
