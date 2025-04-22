@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Services;
 using Nop.Plugin.Misc.Supplier.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Plugin.Misc.Supplier.Services
 {
@@ -68,6 +69,19 @@ namespace Nop.Plugin.Misc.Supplier.Services
                 await _productSupplierMappingRepository.InsertAsync(newMapping);
             }
         }
+
+        public async Task<int> GetProductSupplierIdAsync(int productId)
+        {
+            var existing = await _productSupplierMappingRepository.Table
+                .FirstOrDefaultAsync(x => x.ProductId == productId);
+
+            if (existing != null)
+            {
+                return existing.SupplierId;
+            }
+            else return 0;
+        }
+
 
     }
 }

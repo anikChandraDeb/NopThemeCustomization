@@ -32,10 +32,13 @@ public class SupplierWidgetViewComponent : NopViewComponent
 
         // Edit page: Id > 0
         var suppliers = await _supplierService.GetAllSuppliersAsync();
+        var supplierId = await _supplierService.GetProductSupplierIdAsync(productModel.Id);
 
         var model = new SupplierProductModel
         {
             ProductId = productModel.Id,
+            SelectedSupplierId = supplierId,
+            SelectedSupplierName = suppliers?.FirstOrDefault(s => s.Id == supplierId)?.Name,
             Suppliers = suppliers
         };
 

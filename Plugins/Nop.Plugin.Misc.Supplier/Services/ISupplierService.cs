@@ -15,5 +15,6 @@ namespace Nop.Plugin.Misc.Supplier.Services
         Task<IList<SupplierEntity>> GetAllSuppliersAsync();
         Task<IPagedList<SupplierEntity>> GetAllAsync(string searchName, string searchEmail, int pageIndex, int pageSize);
         Task InsertOrUpdateProductSupplierMappingAsync(int productId, int supplierId);
+        Task<int> GetProductSupplierIdAsync(int productId);
     }
 }
