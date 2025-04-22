@@ -14,6 +14,7 @@ using System.Globalization;
 using Nop.Plugin.Misc.Supplier.Components;
 using Nop.Services.Cms;
 using Nop.Web.Framework.Infrastructure;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 
 namespace Nop.Plugin.Misc.Supplier;
@@ -47,7 +48,7 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
             ["Admin.Suppliers.Backtolist"]="back to supplier list",
             ["Admin.Supplier.Added"] ="Supplier Added Successfully",
             ["Admin.Vendors.Updated"]="Supplier Updated Successfully",
-
+            ["Admin.Suppliers.EditSupplierDetails"]="Edit Supplier Details",
             //Required
             ["Admin.Suppliers.Fields.Name.Required"] = "Supplier name is required",
             ["Admin.Suppliers.Fields.Email.Required"] = "Not a Valid Email",
@@ -164,24 +165,16 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
     /// <returns>View component type</returns>
     public Type GetWidgetViewComponent(string widgetZone)
     {
-        return typeof(ExampleWidgetViewComponent);
+        return typeof(SupplierWidgetViewComponent);
     }
 
-    /// <summary>
-    /// Gets widget zones where this widget should be rendered
-    /// </summary>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the widget zones
-    /// </returns>
+    // Fixing the error by replacing the incorrect widget zone with a valid one from the provided AdminWidgetZones context.
     public Task<IList<string>> GetWidgetZonesAsync()
     {
         return Task.FromResult<IList<string>>(new List<string>
         {
             AdminWidgetZones.ProductDetailsBlock
-
         });
-
     }
 
     // Add an event consumer to add a menu item in the admin panel
@@ -201,16 +194,25 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
                 return;
 
             // Add custom menu item in the admin panel
-            eventMessage.RootMenuItem.InsertBefore("Local plugins",
-                new AdminMenuItem
-                {
-                    SystemName = "Misc.Supplier", // Unique name for your plugin
-                    Title = "Supplier", // Title for the menu item
-                    Url = eventMessage.GetMenuItemUrl("Supplier", "Index"), // URL for the menu item
-                    //Url = "/Admin/Supplier/Index", // Explicit URL for the menu item pointing to the SupplierController's Index action
-                    IconClass = "far fa-dot-circle", // Icon for the menu item
-                    Visible = true, // Make the menu item visible
-                });
+            //eventMessage.RootMenuItem.InsertBefore("Local plugins",
+            //    new AdminMenuItem
+            //    {
+            //        SystemName = "Misc.Supplier", // Unique name for your plugin
+            //        Title = "Supplier", // Title for the menu item
+            //        Url = eventMessage.GetMenuItemUrl("Supplier", "Index"), // URL for the menu item
+            //        //Url = "/Admin/Supplier/Index", // Explicit URL for the menu item pointing to the SupplierController's Index action
+            //        IconClass = "far fa-dot-circle", // Icon for the menu item
+            //        Visible = true, // Make the menu item visible
+            //    });
+
+            eventMessage.RootMenuItem.InsertAfter("Catalog",new AdminMenuItem
+            {
+                SystemName = "Misc.Supplier",
+                Title = "Supplier",
+                Url = eventMessage.GetMenuItemUrl("Supplier", "Index"),
+                IconClass = "far fa-dot-circle",
+                Visible = true
+            });
         }
     }
     

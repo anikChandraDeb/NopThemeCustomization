@@ -20,6 +20,11 @@ namespace Nop.Plugin.Misc.Supplier.Services
         public async Task UpdateAsync(SupplierEntity supplier) => await _repository.UpdateAsync(supplier);
         public async Task DeleteAsync(SupplierEntity supplier) => await _repository.DeleteAsync(supplier);
         public async Task<SupplierEntity> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
+
+        public async Task<IList<SupplierEntity>> GetAllSuppliersAsync()
+        {
+            return await _repository.Table.ToListAsync();
+        }
         public async Task<IPagedList<SupplierEntity>> GetAllAsync(string name, string email, int pageIndex, int pageSize)
         {
             var query = _repository.Table;
