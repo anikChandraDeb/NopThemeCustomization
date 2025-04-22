@@ -1,0 +1,31 @@
+﻿@using Nop.Plugin.Misc.Supplier.Areas.Admin.Model
+@model SupplierModel
+
+@{
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	ViewBag.PageTitle = T("Admin.Suppliers.AddNew").Text;
+	NopHtml.SetActiveMenuItemSystemName("Suppliers");
+}
+
+<form asp-controller="Supplier" asp-action="Create" method="post">
+	<div class="content-header clearfix">
+		<h1 class="float-left">
+			@T("Admin.Suppliers.AddNew")
+			<small>
+				<i class="fas fa-arrow-circle-left"></i>
+				<a asp-action="Index" >@T("Admin.Suppliers.BackToList")</a>
+			</small>
+		</h1>
+		<div class="float-right">
+			<button type="submit" name="save" class="btn btn-primary">
+				<i class="far fa-floppy-disk"></i>
+				@T("Admin.Common.Save")
+			</button>
+			<button type="submit" name="save-continue" class="btn btn-primary">
+				<i class="far fa-floppy-disk"></i>
+				@T("Admin.Common.SaveContinue")
+			</button>
+		</div>
+	</div>
+	@await Html.PartialAsync("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/_CreateOrUpdate.cshtml", Model)
+</form>

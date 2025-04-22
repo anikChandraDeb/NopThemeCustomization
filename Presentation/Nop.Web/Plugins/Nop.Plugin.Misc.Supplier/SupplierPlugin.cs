@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Nop.Plugin.Misc.Supplier.Infrastructure;
+using Nop.Plugin.Misc.Supplier.Areas.Admin.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Events;
 using Nop.Services.Plugins;
@@ -11,22 +11,17 @@ using Nop.Services.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Data;
 using System.Globalization;
-using Nop.Plugin.Misc.Supplier.Components;
+using Nop.Plugin.Misc.Supplier.Areas.Admin.Components;
 using Nop.Services.Cms;
 using Nop.Web.Framework.Infrastructure;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-
 namespace Nop.Plugin.Misc.Supplier;
-/// <summary>
-/// Rename this file and change to the correct type
-/// </summary>
 public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
 {
     private readonly IPermissionService _permissionService;
     private readonly ILocalizationService _localizationService;
     private readonly INopDataProvider _dataProvider;
-
     public SupplierPlugin(
         IPermissionService permissionService,
         ILocalizationService localizationService,
@@ -36,7 +31,6 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
         _localizationService = localizationService;
         _dataProvider = dataProvider;
     }
-
     public override async Task InstallAsync()
     {
         var resources = new Dictionary<string, string>
@@ -150,7 +144,6 @@ public class SupplierPlugin : BasePlugin, IMiscPlugin , IWidgetPlugin
             });
         }
     }
-
 
     //Widget
     /// <summary>
