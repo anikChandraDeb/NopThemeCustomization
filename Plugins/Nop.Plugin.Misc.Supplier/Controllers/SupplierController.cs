@@ -163,7 +163,7 @@ namespace Nop.Plugin.Misc.Supplier.Controllers
                     await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Name, localized.Name, localized.LanguageId);
                     await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Address, localized.Address, localized.LanguageId);
                     await _localizedEntityService.SaveLocalizedValueAsync(supplierEntity, x => x.Description, localized.Description, localized.LanguageId);
-                }
+                } 
 
                 _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Vendors.Updated"));
 

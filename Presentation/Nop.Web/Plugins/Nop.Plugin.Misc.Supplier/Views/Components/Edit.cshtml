@@ -14,56 +14,74 @@
 	<div id="supplier-info" class="collapse show">
 		<div class="card-body">
 			<div class="form-group row">
-				<p>Suppliers are the individuals or companies that provide products to your store. For example, if you're selling electronics, you might have different suppliers for mobile phones, laptops, or accessories. Assigning a supplier to a product helps track where your inventory is sourced from and can simplify communication and reordering. You can add suppliers in Suppliers and assign them to products from the product edit page. Managing suppliers can help streamline your supply chain and maintain accurate product sourcing information.</p>
+				<p>
+					Suppliers are the individuals or companies that provide products to your store...
+					<!-- trimmed for brevity -->
+				</p>
 
-				<div class="col-md-12">
-					<select id="SupplierId" name="SupplierId" class="form-control">
-						@if (Model.SelectedSupplierId > 0)
-						{
-							<option value="@Model.SelectedSupplierId">@Model.SelectedSupplierName</option>
-						}
-						else
-						{
-							<option value="">Select a supplier</option>
-						}
-						@foreach (var supplier in Model.Suppliers)
-						{
-							<option value="@supplier.Id">@supplier.Name</option>
-						}
-					</select>
+				
+				<div class="col-md-12 mb-2">
+					<div class="card">
+						<div class="card-body">
+							<select id="SupplierId" name="SupplierId" class="form-control">
+								@if (Model.SelectedSupplierId > 0)
+								{
+									<option value="@Model.SelectedSupplierId">@Model.SelectedSupplierName</option>
+								}
+								else
+								{
+									<option value="">Select a supplier</option>
+								}
+								@foreach (var supplier in Model.Suppliers)
+								{
+									<option value="@supplier.Id">@supplier.Name</option>
+								}
+							</select>
+							<button type="button" id="assignSupplierBtn" class="btn btn-primary">
+								Assign Supplier
+							</button>
+						</div>
+					</div>
 				</div>
+
+						
+						
+					
+
 			</div>
 		</div>
 	</div>
 </div>
 
-
 <script>
 	$(document).ready(function () {
-		$('#SupplierId').change(function () {
-			const supplierId = $(this).val();
+		$('#assignSupplierBtn').click(function () {
+			const supplierId = $('#SupplierId').val();
 			const productId = '@Model.ProductId';
 
-			if (supplierId) {
-				$.ajax({
-					type: 'POST',
-					url: '/Admin/Supplier/AssignSupplierToProduct',
-					data: {
-						supplierId: supplierId,
-						productId: productId
-					},
-					success: function (response) {
-						if (response.success) {
-							alert(response.message);
-						} else {
-							alert("Failed to add supplier: " + response.message);
-						}
-					},
-					error: function () {
-						alert("Error while adding supplier.");
-					}
-				});
+			if (!supplierId) {
+				alert("Please select a supplier first.");
+				return;
 			}
+
+			$.ajax({
+				type: 'POST',
+				url: '/Admin/Supplier/AssignSupplierToProduct',
+				data: {
+					supplierId: supplierId,
+					productId: productId
+				},
+				success: function (response) {
+					if (response.success) {
+						alert(response.message);
+					} else {
+						alert("Failed to assign supplier: " + response.message);
+					}
+				},
+				error: function () {
+					alert("An error occurred while assigning the supplier.");
+				}
+			});
 		});
 	});
 </script>

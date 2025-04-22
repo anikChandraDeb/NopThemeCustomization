@@ -67,6 +67,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Area\Admin\" />
+  </ItemGroup>
  
   <!-- This target execute after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
