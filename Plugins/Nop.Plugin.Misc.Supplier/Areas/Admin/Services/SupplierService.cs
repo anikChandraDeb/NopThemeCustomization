@@ -1,11 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Nop.Services;
-using Nop.Plugin.Misc.Supplier.Areas.Admin.Model;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Services
 {
@@ -25,10 +20,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Services
         public async Task DeleteAsync(SupplierEntity supplier) => await _repository.DeleteAsync(supplier);
         public async Task<SupplierEntity> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
-        public async Task<IList<SupplierEntity>> GetAllSuppliersAsync()
-        {
-            return await _repository.Table.ToListAsync();
-        }
+        public async Task<IList<SupplierEntity>> GetAllSuppliersAsync() =>  await _repository.Table.ToListAsync();
         public async Task<IPagedList<SupplierEntity>> GetAllAsync(string name, string email, int pageIndex, int pageSize)
         {
             var query = _repository.Table;

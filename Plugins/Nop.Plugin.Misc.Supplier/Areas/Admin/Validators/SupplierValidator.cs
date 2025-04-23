@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Model;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;

@@ -12,7 +12,6 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Mapping
                 .WithColumn(nameof(ProductSupplierMapping.Id)).AsInt32().PrimaryKey().Identity()
                 .WithColumn(nameof(ProductSupplierMapping.ProductId)).AsInt32().NotNullable()
                 .WithColumn(nameof(ProductSupplierMapping.SupplierId)).AsInt32().Nullable();
-                
         }
     }
 }

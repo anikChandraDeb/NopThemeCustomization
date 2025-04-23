@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Model;
+using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Components;
-using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Components;
 public class SupplierWidgetViewComponent : NopViewComponent
@@ -25,7 +19,7 @@ public class SupplierWidgetViewComponent : NopViewComponent
         var productModel = additionalData as ProductModel;
 
         if (productModel == null || productModel.Id == 0)
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/Create.cshtml");
+            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/SupplierWidget/Create.cshtml");
 
         var suppliers = await _supplierService.GetAllSuppliersAsync();
         var supplierId = await _supplierService.GetProductSupplierIdAsync(productModel.Id);
@@ -38,6 +32,6 @@ public class SupplierWidgetViewComponent : NopViewComponent
             Suppliers = suppliers
         };
 
-        return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/Edit.cshtml", model);
+        return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/SupplierWidget/Edit.cshtml", model);
     }
 }

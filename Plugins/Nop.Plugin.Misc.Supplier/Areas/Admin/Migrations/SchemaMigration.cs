@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
-using Nop.Data.Migrations;
 using Nop.Data.Extensions;
+using Nop.Data.Migrations;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
 
 namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Migrations

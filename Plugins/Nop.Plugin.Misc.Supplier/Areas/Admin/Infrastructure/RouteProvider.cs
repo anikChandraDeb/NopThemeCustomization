@@ -8,7 +8,6 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Infrastructure
     {
         public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            // Register your admin controller route
             endpointRouteBuilder.MapControllerRoute(
                 name: "Plugin.Misc.Supplier.Admin",
                 pattern: "Admin/Supplier/{action=List}/{id?}",

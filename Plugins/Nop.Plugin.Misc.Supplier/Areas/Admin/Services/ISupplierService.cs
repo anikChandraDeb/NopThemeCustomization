@@ -1,7 +1,5 @@
 ﻿using Nop.Core;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Services
 {

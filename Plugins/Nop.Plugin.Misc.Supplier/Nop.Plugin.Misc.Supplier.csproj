@@ -17,10 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Components\Create.cshtml">
+    <Content Include="Areas\Admin\Views\Components\SupplierWidget\Create.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Areas\Admin\Views\Components\Edit.cshtml">
+    <Content Include="Areas\Admin\Views\Components\SupplierWidget\Edit.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logo.jpg">
