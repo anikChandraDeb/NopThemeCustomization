@@ -1,4 +1,5 @@
-﻿using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
+﻿using Nop.Core.Caching;
+using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Model;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
 using Nop.Services.Localization;
@@ -13,16 +14,19 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Factories
         private readonly ILocalizedModelFactory _localizedModelFactory;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILocalizationService _localizationService;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         public SupplierModelFactory(ISupplierService supplierService,
             ILocalizedModelFactory localizedModelFactory,
             ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            IStaticCacheManager staticCacheManager)
         {
             _supplierService = supplierService;
             _localizedModelFactory = localizedModelFactory;
             _localizedEntityService = localizedEntityService;
             _localizationService = localizationService;
+            _staticCacheManager = staticCacheManager;
         }
 
         public SupplierSearchModel PrepareSupplierSearchModel()
@@ -105,6 +109,25 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Factories
 
         public async Task<SupplierListModel> PrepareSupplierListModelAsync(SupplierSearchModel searchModel)
         {
+            // Normalize search fields
+            //var name = string.IsNullOrWhiteSpace(searchModel.SearchName) ? null : searchModel.SearchName.Trim();
+            //var email = string.IsNullOrWhiteSpace(searchModel.SearchEmail) ? null : searchModel.SearchEmail.Trim();
+
+            //// Prepare cache key using normalized values
+            //var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+            //    SupplierDefaults.AdminSupplierAllModelKey,
+            //    name,
+            //    email,
+            //    searchModel.Page,
+            //    searchModel.PageSize
+            //);
+
+            //// Try to get from cache
+            //var cachedModel = await _staticCacheManager.GetAsync<SupplierListModel>(cacheKey);
+            //if (cachedModel != null)
+            //    return cachedModel;
+
+            // Get data with the same normalized values
             var suppliers = await _supplierService.GetAllAsync(
                 searchModel.SearchName,
                 searchModel.SearchEmail,
@@ -112,6 +135,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Factories
                 searchModel.PageSize
             );
 
+            // Prepare model
             var model = await new SupplierListModel().PrepareToGridAsync(searchModel, suppliers, () =>
             {
                 return suppliers.Select(supplier => new SupplierModel
@@ -123,12 +147,17 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Factories
                     Email = supplier.Email,
                     Address = supplier.Address,
                     Description = supplier.Description,
-                    IsActive = supplier.IsActive       
+                    IsActive = supplier.IsActive
                 }).ToAsyncEnumerable();
             });
 
+            // Save to cache
+            //await _staticCacheManager.SetAsync(cacheKey, model);
+
             return model;
         }
+
+
     }
 
 }

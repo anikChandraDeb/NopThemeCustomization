@@ -40,7 +40,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Controllers
         {
             var model = _supplierModelFactory.PrepareSupplierSearchModel();
 
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/Index.cshtml", model);
+            return View(model);
         }
 
 
@@ -54,7 +54,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             var model = await _supplierModelFactory.PrepareCreateSupplierModelAsync();
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/Create.cshtml", model);
+            return View(model);
         }
 
 
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Controllers
                     : RedirectToAction("Index");
             }
 
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/Create.cshtml", model);
+            return View(model);
         }
 
 
@@ -93,7 +93,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Controllers
 
             var model = await _supplierModelFactory.PrepareEditModelAsync(supplierEntity);
 
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/Edit.cshtml", model);
+            return View(model);
         }
 
 
@@ -118,7 +118,7 @@ namespace Nop.Plugin.Misc.Supplier.Areas.Admin.Controllers
                 return RedirectToAction("Edit", new { id = supplierEntity.Id });
             }
 
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/Edit.cshtml", model);
+            return View(model);
         }
 
         [HttpPost]

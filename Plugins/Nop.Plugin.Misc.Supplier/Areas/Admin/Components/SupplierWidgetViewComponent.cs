@@ -19,7 +19,7 @@ public class SupplierWidgetViewComponent : NopViewComponent
         var productModel = additionalData as ProductModel;
 
         if (productModel == null || productModel.Id == 0)
-            return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/SupplierWidget/Create.cshtml");
+            return View("Create");
 
         var suppliers = await _supplierService.GetAllSuppliersAsync();
         var supplierId = await _supplierService.GetProductSupplierIdAsync(productModel.Id);
@@ -32,6 +32,6 @@ public class SupplierWidgetViewComponent : NopViewComponent
             Suppliers = suppliers
         };
 
-        return View("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Components/SupplierWidget/Edit.cshtml", model);
+        return View("Edit", model);
     }
 }

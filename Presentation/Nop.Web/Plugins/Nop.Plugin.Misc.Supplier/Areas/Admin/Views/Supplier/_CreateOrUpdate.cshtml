@@ -14,7 +14,7 @@
 		<div class="form-horizontal">
 			<nop-cards id="supplier-cards">
 				<nop-card asp-name="supplier-info" asp-icon="fas fa-info" asp-title="@T("Admin.Suppliers.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
-					@await Html.PartialAsync("~/Plugins/Nop.Plugin.Misc.Supplier/Areas/Admin/Views/Supplier/_CreateOrUpdate.Info.cshtml", Model)
+					@await Html.PartialAsync("_CreateOrUpdate.Info", Model)
 				</nop-card>
 			</nop-cards>
 		</div>
