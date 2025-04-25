@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Plugin.Widget.HelloWorld.Components;
+﻿using Nop.Plugin.Widget.HelloWorld.Components;
 using Nop.Services.Cms;
 using Nop.Services.Plugins;
 
