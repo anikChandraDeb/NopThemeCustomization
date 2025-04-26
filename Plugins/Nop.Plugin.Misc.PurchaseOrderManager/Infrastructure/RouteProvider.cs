@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using Nop.Web.Framework.Mvc.Routing;
 
-namespace Nop.Plugin.Misc.PurchaseOrder.Infrastructure;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Infrastructure;
 /// <summary>
 /// Represents plugin route provider
 /// </summary>

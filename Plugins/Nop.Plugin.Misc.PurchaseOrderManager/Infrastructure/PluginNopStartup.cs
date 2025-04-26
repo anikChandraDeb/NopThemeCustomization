@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Plugin.Misc.PurchaseOrder.Infrastructure;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Infrastructure;
 public class PluginNopStartup : INopStartup
 {
     /// <summary>

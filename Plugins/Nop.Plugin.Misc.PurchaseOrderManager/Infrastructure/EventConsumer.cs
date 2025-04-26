@@ -8,7 +8,7 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Events;
 using Nop.Web.Framework.Menu;
 
-namespace Nop.Plugin.Misc.PurchaseOrder.Infrastructure;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Infrastructure;
 public class EventConsumer : IConsumer<AdminMenuCreatedEvent>
 {
     private readonly IPermissionService _permissionService;
