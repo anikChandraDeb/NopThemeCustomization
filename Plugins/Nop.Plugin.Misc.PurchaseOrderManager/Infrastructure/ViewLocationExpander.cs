@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Razor;
 
-namespace Nop.Plugin.Misc.PurchaseOrder.Infrastructure;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Infrastructure;
 public class ViewLocationExpander : IViewLocationExpander
 {
     /// <summary>
@@ -25,11 +25,11 @@ public class ViewLocationExpander : IViewLocationExpander
     {
         if (context.AreaName == "Admin")
         {
-            viewLocations = new[] { $"/Plugins/Nop.Plugin.Misc.PurchaseOrder/Areas/Admin/Views/{context.ControllerName}/{context.ViewName}.cshtml" }.Concat(viewLocations);
+            viewLocations = new[] { $"/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Areas/Admin/Views/{context.ControllerName}/{context.ViewName}.cshtml" }.Concat(viewLocations);
         }
         else
         {
-            viewLocations = new[] { $"/Plugins/Nop.Plugin.Misc.PurchaseOrder/Views/{context.ControllerName}/{context.ViewName}.cshtml" }.Concat(viewLocations);
+            viewLocations = new[] { $"/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Views/{context.ControllerName}/{context.ViewName}.cshtml" }.Concat(viewLocations);
         }
 
         return viewLocations;

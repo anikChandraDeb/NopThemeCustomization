@@ -1,6 +1,6 @@
 ﻿using Nop.Data.Mapping;
 
-namespace Nop.Plugin.Misc.PurchaseOrder.Mapping;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Mapping;
 public partial class NameCompatibility : INameCompatibility
 {
     /// <summary>
