@@ -114,14 +114,13 @@
     {
       "SystemName": "Misc.PurchaseOrder",
       "Version": "1.00"
+    },
+    {
+      "SystemName": "Misc.PurchaseOrderManager",
+      "Version": "1.00"
     }
   ],
   "PluginNamesToUninstall": [],
   "PluginNamesToDelete": [],
-  "PluginNamesToInstall": [
-    {
-      "Item1": "Misc.PurchaseOrderManager",
-      "Item2": "b08acb28-d747-4dbc-bdfa-1bda27a397b7"
-    }
-  ]
+  "PluginNamesToInstall": []
 }
