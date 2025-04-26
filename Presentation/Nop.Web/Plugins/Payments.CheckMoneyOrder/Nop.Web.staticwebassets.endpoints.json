@@ -51667,6 +51667,88 @@
       ]
     },
     {
+      "Route": "images/thumbs/default-image_75.png",
+      "AssetFile": "images/thumbs/default-image_75.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2093"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vvtGcYWuS65TJXxLLqgvqfLjlj/VWPVLba9Dro7LQsI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 08:39:52 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vvtGcYWuS65TJXxLLqgvqfLjlj/VWPVLba9Dro7LQsI="
+        }
+      ]
+    },
+    {
+      "Route": "images/thumbs/default-image_75.u8wiklw6ig.png",
+      "AssetFile": "images/thumbs/default-image_75.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2093"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vvtGcYWuS65TJXxLLqgvqfLjlj/VWPVLba9Dro7LQsI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 22 Apr 2025 08:39:52 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "u8wiklw6ig"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vvtGcYWuS65TJXxLLqgvqfLjlj/VWPVLba9Dro7LQsI="
+        },
+        {
+          "Name": "label",
+          "Value": "images/thumbs/default-image_75.png"
+        }
+      ]
+    },
+    {
       "Route": "images/thumbs/placeholder.e0z1goekgi.txt",
       "AssetFile": "images/thumbs/placeholder.txt.gz",
       "Selectors": [
