@@ -28,7 +28,7 @@ public class EventConsumer : IConsumer<AdminMenuCreatedEvent>
             {
                 SystemName = "YourCustomSystemName",
                 Title = "Purchase Order",
-                Url = eventMessage.GetMenuItemUrl("PurchaseOrder", "List"),
+                Url = eventMessage.GetMenuItemUrl("PurchaseOrder", "Index"),
                 IconClass = "far fa-dot-circle",
                 Visible = true,
             });
