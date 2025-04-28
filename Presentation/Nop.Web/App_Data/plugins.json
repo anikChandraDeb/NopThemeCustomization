@@ -110,9 +110,18 @@
     {
       "SystemName": "Misc.Supplier",
       "Version": "4.80.6"
+    },
+    {
+      "SystemName": "Misc.PurchaseOrder",
+      "Version": "1.00"
     }
   ],
   "PluginNamesToUninstall": [],
   "PluginNamesToDelete": [],
-  "PluginNamesToInstall": []
+  "PluginNamesToInstall": [
+    {
+      "Item1": "Misc.PurchaseOrderManager",
+      "Item2": "b08acb28-d747-4dbc-bdfa-1bda27a397b7"
+    }
+  ]
 }

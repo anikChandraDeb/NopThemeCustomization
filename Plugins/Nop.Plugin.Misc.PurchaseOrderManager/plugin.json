@@ -1,0 +1,13 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Purchase Order Manager",
+  "SystemName": "Misc.PurchaseOrderManager",
+  "Version": "1.00",
+  "SupportedVersions": [
+    "4.80"
+  ],
+  "Author": "BS 23",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.PurchaseOrderManager.dll",
+  "Description": "This plugin enables administrators to create and manage purchase orders from suppliers directly within the nopCommerce admin panel."
+}
