@@ -1,0 +1,160 @@
+﻿	@using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
+	@model AddProductToPurchaseOrderSearchModel
+
+@{
+	Layout = "_AdminPopupLayout";
+	ViewBag.PageTitle = T("Admin.PurchaseOrders.AddProduct").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+	<script>
+		try {
+			window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();
+		}
+		catch (e){}
+		window.close();
+	</script>
+}
+else
+{
+	<form asp-controller="PurchaseOrder" asp-action="AddProductPopup" method="get">
+		@* <input type="hidden" name="supplierId" value="@Context.Request.Query["supplierId"]" /> *@
+		<input type="hidden" asp-for="SupplierId" />
+		<input type="hidden" name="btnId" value="@Context.Request.Query["btnId"]" />
+		<input type="hidden" name="formId" value="@Context.Request.Query["formId"]" />
+		<div class="content-header clearfix">
+			<h1 class="float-left">
+				@T("Admin.PurchaseOrder.AddNew")
+			</h1>
+			<div class="pull-right">
+				&nbsp;
+			</div>
+		</div>
+		<div class="content">
+			<div class="container-fluid">
+				<div class="form-horizontal">
+					<div class="cards-group">
+						<div class="card card-default">
+							<div class="card-body">
+								@await Html.PartialAsync("Table", new DataTablesModel
+  {
+	  Name = "products-grid",
+	  UrlRead = new DataUrl("ProductListForPurchaseOrder", "PurchaseOrder", null),
+	  SearchButtonId = "search-products",
+	  Length = Model.PageSize,
+	  LengthMenu = Model.AvailablePageSizes,
+	  Filters =
+							new List<FilterParameter>
+							{
+							// new FilterParameter(nameof(Model.SearchProductName)),
+							// new FilterParameter(nameof(Model.SearchSku)),
+							// new FilterParameter(nameof(Model.SearchCategoryId)),
+							new FilterParameter(nameof(Model.SupplierId))
+							},
+	  ColumnCollection = new List<ColumnProperty>
+							{
+							new ColumnProperty(nameof(ProductModel.Id))
+							{
+							IsMasterCheckBox = true,
+							Render = new RenderCheckBox(nameof(Model.SelectedProductIds)),
+							ClassName = NopColumnClassDefaults.CenterAll,
+							Width = "50"
+							},
+							new ColumnProperty(nameof(ProductModel.Name))
+							{
+							Title = T("Admin.Catalog.Products.Fields.Name").Text
+							},
+							new ColumnProperty(nameof(ProductModel.Sku))
+							{
+							Title = T("Admin.Catalog.Products.Fields.Sku").Text,
+							Width = "50"
+							},
+							new ColumnProperty(nameof(ProductModel.StockQuantity))
+							{
+							Title = T("Admin.Catalog.Products.Fields.StockQuantity").Text,
+							Width = "50"
+							}
+							,
+							new ColumnProperty(nameof(ProductModel.Price))
+							{
+							Title = T("Admin.Catalog.Products.Fields.Price").Text,
+							Width = "100",
+							Render = new RenderCustom("renderPrice")
+							},
+							new ColumnProperty("Quantity")
+							{
+							Title = T("Admin.PurchaseOrders.Fields.Quantity").Text,
+							Width = "100",
+							Render = new RenderCustom("renderQuantity")
+							}
+							}
+  })
+
+								<script>
+									function renderPrice(data, type, row, meta) {
+										return `<input type="number" class="form-control" name="price_${row.Id}" value="${row.Price}" step="0.01" min="0" />`;
+									}
+									function renderQuantity(data, type, row, meta) {
+										return `<input type="number" class="form-control" name="quantity_${row.Id}" value="1" min="1" />`;
+									}
+								</script>
+							</div>
+							<div class="card-footer">
+								<button type="button" class="btn btn-primary" onclick="addSelectedProducts()">
+									<i class="fa fa-plus"></i>
+									@T("Admin.PurchaseOrders.AddSelectedProducts")
+								</button>
+								<script>
+																	function addSelectedProducts() {
+										var selectedIds = [];
+										var prices = {};
+										var quantities = {};
+
+										$('#products-grid input[type=checkbox][name=SelectedProductIds]:checked').each(function () {
+											var id = $(this).val();
+											selectedIds.push(parseInt(id));
+											prices[id] = parseFloat($('input[name="price_' + id + '"]').val());
+											quantities[id] = parseInt($('input[name="quantity_' + id + '"]').val());
+										});
+
+										$.ajax({
+											contentType: "application/json; charset=utf-8",
+											type: "POST",
+											url: "@(Url.Action("AddProductsToOrder", "PurchaseOrder"))",
+											data: JSON.stringify({
+												selectedIds: selectedIds,
+												prices: prices,
+												quantities: quantities,
+												supplierId: @Model.SupplierId
+											}),
+											success: function () {
+											try {
+											  if (window.opener && typeof window.opener.refreshPurchaseOrderItems === 'function') {
+												console.log('Calling parent function...');
+												window.opener.refreshPurchaseOrderItems();
+											  } else {
+												console.warn('Parent function not available');
+											  }
+											} catch (e) {
+											  console.error('Error calling parent function:', e);
+											}
+
+												window.close();
+											},
+											error: function (xhr) {
+												alert('Failed to add products: ' + xhr.responseText);
+											}
+										});
+									}
+
+
+								</script>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+}

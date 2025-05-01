@@ -1,0 +1,127 @@
+﻿@using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
+@model PurchaseOrderModel
+
+<form asp-controller="PurchaseOrder" asp-action="UpdateItems" method="post">
+	@if (Model.Items.Count > 0)
+	{
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card card-default">
+						<div class="card-heading">
+							<h3 class="card-title">@T("Admin.PurchaseOrders.PurchaseOrderItems")</h3>
+						</div>
+						<div class="card-body table-responsive">
+							<table class="table table-bordered table-striped">
+								<thead>
+									<tr>
+										<th>@T("Admin.PurchaseOrders.Fields.Product")</th>
+										<th>@T("Admin.PurchaseOrders.Fields.Sku")</th>
+										<th class="text-center">@T("Admin.PurchaseOrders.Fields.Quantity")</th>
+										<th class="text-center">@T("Admin.PurchaseOrders.Fields.UnitCost")</th>
+										<th class="text-center">@T("Admin.PurchaseOrders.Fields.LineTotal")</th>
+										<th class="text-center">@T("Admin.Common.Delete")</th>
+									</tr>
+								</thead>
+								<tbody>
+									@for (int i = 0; i < Model.Items.Count; i++)
+									{
+										<tr>
+											<td>
+												@Model.Items[i].ProductName
+												<input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
+												<input type="hidden" name="Items[@i].ProductName" value="@Model.Items[i].ProductName" />
+												<input type="hidden" name="Items[@i].ProductId" value="@Model.Items[i].ProductId" />
+											</td>
+											<td>
+												@Model.Items[i].Sku
+												<input type="hidden" name="Items[@i].Sku" value="@Model.Items[i].Sku" />
+											</td>
+											<td class="text-center">
+												<input type="number" name="Items[@i].Quantity" value="@Model.Items[i].Quantity" class="form-control quantity" data-index="@i" />
+											</td>
+											<td class="text-center">
+												<input type="number" name="Items[@i].UnitCost" value="@Model.Items[i].UnitCost" class="form-control unit-cost" data-index="@i" />
+											</td>
+											<td class="text-center">
+												<span class="line-total" id="LineTotal_@i">@Model.Items[i].LineTotal.ToString("F2")</span>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-danger btn-sm delete-item" data-id="@Model.Items[i].ProductId">
+													@T("Admin.Common.Delete")
+												</button>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
+						<div class="card-footer">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group row">
+										<div class="col-md-6">
+											<label>@T("Admin.PurchaseOrders.Fields.TotalAmount")</label>
+										</div>
+										<div class="col-md-6">
+											<div class="form-text-row">
+												<span id="TotalAmountDisplay">@Model.TotalAmount.ToString("F2")</span>
+												<input type="hidden" asp-for="TotalAmount" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>No Products Selected..</h4>
+				</div>
+			</div>
+		</div>
+	}
+</form>
+<script>
+	$(document).ready(function() {
+		// Calculate line total when quantity or price changes
+		function calculateLineTotal(index) {
+			var quantity = parseFloat($('input[name="Items[' + index + '].Quantity"]').val()) || 0;
+			var unitCost = parseFloat($('input[name="Items[' + index + '].UnitCost"]').val()) || 0;
+			var lineTotal = quantity * unitCost;
+
+			$('#LineTotal_' + index).text(lineTotal.toFixed(2));
+			return lineTotal;
+		}
+
+		// Calculate total amount for all items
+		function calculateTotalAmount() {
+			var total = 0;
+			$('[id^="LineTotal_"]').each(function() {
+				var index = this.id.split('_')[1];
+				total += calculateLineTotal(index);
+			});
+
+			$('#TotalAmountDisplay').text(total.toFixed(2));
+			$('input[name="TotalAmount"]').val(total.toFixed(2));
+		}
+
+		// Update calculations on input change (works while typing)
+		$(document).on('input', '.quantity, .unit-cost', function() {
+			var index = $(this).data('index');
+			calculateLineTotal(index);
+			calculateTotalAmount();
+		});
+
+		// Initial calculation on page load
+		calculateTotalAmount();
+	});
+</script>

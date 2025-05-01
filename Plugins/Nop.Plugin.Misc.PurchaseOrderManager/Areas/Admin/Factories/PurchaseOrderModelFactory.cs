@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Services;
+using Nop.Plugin.Misc.PurchaseOrderManager.Models;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
 using Nop.Services.Customers;
+using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Models.Extensions;
 
 namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
@@ -73,7 +77,7 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
                         Id = po.Id,
                         SupplierId = po.SupplierId,
                         SupplierName = supplier?.Name ?? "N/A",
-                        CreatedOnUtc = po.CreatedOnUtc,
+                        OrderDate = po.CreatedOnUtc,
                         CreatedBy = createdBy?.Email ?? "System",
                         TotalAmount = po.TotalAmount
                     };
@@ -90,7 +94,7 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
                 model ??= new PurchaseOrderModel();
                 model.Id = purchaseOrder.Id;
                 model.SupplierId = purchaseOrder.SupplierId;
-                model.CreatedOnUtc = purchaseOrder.CreatedOnUtc;
+                model.OrderDate = purchaseOrder.CreatedOnUtc;
                 model.TotalAmount = purchaseOrder.TotalAmount;
                 model.CreatedById = purchaseOrder.CreatedById;
 
@@ -109,5 +113,91 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
 
             return model;
         }
+
+        public async Task<PurchaseOrderModel> PreparePurchaseOrderWithSuppliersModelAsync()
+        {
+            // Create the PurchaseOrderModel instance
+            var model = new PurchaseOrderModel
+            {
+                OrderDate = DateTime.UtcNow
+            };
+
+            // Fetch the list of suppliers
+            var suppliers = await _supplierService.GetAllSuppliersAsync();
+
+            // Populate AvailableSuppliers
+            model.AvailableSuppliers = suppliers.Select(supplier => new SelectListItem
+            {
+                Value = supplier.Id.ToString(),
+                Text = supplier.Name
+            }).ToList();
+
+            // Retrieve purchase order items from session
+            var items = _purchaseOrderService.GetSessionItems(); // Assuming it returns List<PurchaseOrderItemModel>
+            model.TotalAmount = items.Sum(item => item.LineTotal);
+
+            // Populate Items property
+            //model.Items = items;
+
+            // Clear session items after assigning to model
+            //_purchaseOrderService.ClearSessionItems();
+            return model;
+        }
+
+
+
+        public async Task<ProductListModel> PrepareSupplierProductListModelAsync(AddProductToPurchaseOrderSearchModel searchModel)
+        {
+            var products = await _purchaseOrderService.GetProductsBySupplierIdAsync(
+                supplierId: searchModel.SupplierId,
+                pageIndex: searchModel.Page - 1,
+                pageSize: searchModel.PageSize);
+
+            var model = await ModelExtensions.PrepareToGridAsync<ProductListModel, ProductModel, ProductModel>(
+                new ProductListModel(),
+                searchModel,
+                products,
+                () =>
+                {
+                    return products.Select(product => new ProductModel
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Sku = product.Sku,
+                        StockQuantity=product.StockQuantity,
+                        Price = product.Price
+                    }).ToAsyncEnumerable();
+                });
+
+
+
+            return model;
+        }
+
+        //public async Task<PurchaseOrderItemsListModel> PreparePurchaseOrderItemsListModelAsync(int purchaseOrderId)
+        //{
+        //    var items = await _purchaseOrderService.GetItemsByPurchaseOrderIdAsync(purchaseOrderId);
+
+        //    var model = await ModelExtensions.PrepareToGridAsync<PurchaseOrderItemsListModel, PurchaseOrderItemModel, PurchaseOrderItemModel>(
+        //        new PurchaseOrderItemsListModel(),
+        //        new AddProductToPurchaseOrderSearchModel(), // Adjust this model as necessary
+        //        items,
+        //        () =>
+        //        {
+        //            return items.Select(item => new PurchaseOrderItemModel
+        //            {
+        //                Id = item.Id,
+        //                ProductName = item.ProductName,
+        //                Sku = item.Sku,
+        //                Quantity = item.Quantity,
+        //                UnitCost = item.UnitCost,
+        //                LineTotal = item.LineTotal
+        //            }).ToAsyncEnumerable();
+        //        });
+
+        //    return model;
+        //}
+
+
     }
 }

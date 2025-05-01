@@ -1,0 +1,42 @@
+﻿@model DataTablesModel
+
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title">Select Products</h4>
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+		</div>
+		<div class="modal-body">
+			@await Html.PartialAsync("Table", Model)
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" id="add-selected-products">Add Selected</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	function renderProductSelectCheckbox(data, type, row, meta) {
+		return `<input type="checkbox" class="product-select" value="${data}" />`;
+	}
+
+	function renderCurrency(data, type, row, meta) {
+		return '$' + parseFloat(data).toFixed(2);
+	}
+
+	$(document).ready(function() {
+		$('#add-selected-products').click(function() {
+			var selectedProducts = [];
+			$('.product-select:checked').each(function() {
+				selectedProducts.push($(this).val());
+			});
+
+			// Add to main form
+			addProductsToOrder(selectedProducts);
+
+			// Close modal
+			$('#modal-window').modal('hide');
+		});
+	});
+</script>
