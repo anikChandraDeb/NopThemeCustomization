@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentMigrator.Builders.Create.Table;
 using Nop.Data.Mapping.Builders;
-using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
+using Nop.Plugin.Misc.PurchaseOrderManager.Domain;
 
-namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Mapping;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Mapping;
 public class PurchaseOrderProductBuilder : NopEntityBuilder<PurchaseOrderProduct>
 {
     public override void MapEntity(CreateTableExpressionBuilder table)

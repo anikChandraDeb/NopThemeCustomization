@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Core.Caching;
-using Nop.Core;
-using Nop.Data;
-using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
-using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Core.Domain.Catalog;
-using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
-using Newtonsoft.Json;
-using Nop.Plugin.Misc.PurchaseOrderManager.Models;
+﻿using System.Text;
 using Microsoft.AspNetCore.Http;
-using Nop.Services.Catalog;
-using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Domain.Catalog;
+using Nop.Data;
+using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models;
+using Nop.Plugin.Misc.PurchaseOrderManager.Domain;
+using Nop.Plugin.Misc.Supplier.Areas.Admin.Domain;
+using Nop.Web.Areas.Admin.Models.Catalog;
 
-namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Services;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Services;
 public class PurchaseOrderService : IPurchaseOrderService
 {
     private readonly IRepository<PurchaseOrder> _purchaseOrderRepository;

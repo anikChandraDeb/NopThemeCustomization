@@ -1,9 +1,8 @@
 ﻿using Nop.Core;
-using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
-using Nop.Plugin.Misc.PurchaseOrderManager.Models;
+using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models;
+using Nop.Plugin.Misc.PurchaseOrderManager.Domain;
 using Nop.Web.Areas.Admin.Models.Catalog;
-
-namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Services;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Services;
 public interface IPurchaseOrderService
 {
     Task InsertPurchaseOrderAsync(PurchaseOrder purchaseOrder);

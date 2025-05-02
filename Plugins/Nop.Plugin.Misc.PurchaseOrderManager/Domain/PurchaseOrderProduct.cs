@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 
-namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Domain;
 public class PurchaseOrderProduct : BaseEntity
 {
     public int PurchaseOrderId { get; set; }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Nop.Plugin.Misc.PurchaseOrderManager</OutputPath>
+    <OutputPath>$(SolutionDir)\Presentation\Nop.Web\Plugins\Nop.Plugin.Misc.CustomPlugin1</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
     <!--Set this parameter to true to get the dlls copied from the NuGet cache to the output of your project.
     You need to set this parameter to true if your plugin has a nuget package 
@@ -19,21 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\PurchaseOrder\AddProductPopup.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Admin\Views\PurchaseOrder\Edit.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Admin\Views\PurchaseOrder\_PurchaseOrderItems.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Admin\Views\PurchaseOrder\Index.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Areas\Admin\Views\PurchaseOrder\Create.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="logo.jpg">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -56,26 +41,22 @@
 
   <ItemGroup>
     <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web\Nop.Web.csproj" />
-    <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj" />
-    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj" />
-    <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj" />
-    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
-    <ProjectReference Include="..\Nop.Plugin.Misc.PowerBI\Nop.Plugin.Misc.PowerBI.csproj" />
-    <ProjectReference Include="..\Nop.Plugin.Misc.Supplier\Nop.Plugin.Misc.Supplier.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Components\" />
+    <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Extensions\" />
+    <Folder Include="Areas\Admin\Factories\" />
+    <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Validators\" />    
     <Folder Include="Components\" />
     <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
     <Folder Include="Factories\" />
-    <Folder Include="Mapping\Builders\" />
-    <Folder Include="Migrations\" />
     <Folder Include="Models\" />
+    <Folder Include="Services\" />
     <Folder Include="Validators\" />    
   </ItemGroup>
  

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories;
-using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Services;
+using Nop.Plugin.Misc.PurchaseOrderManager.Services;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
 
 namespace Nop.Plugin.Misc.PurchaseOrderManager.Infrastructure

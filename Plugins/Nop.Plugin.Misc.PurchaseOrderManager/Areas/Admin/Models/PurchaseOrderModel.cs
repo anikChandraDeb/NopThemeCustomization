@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 
-namespace Nop.Plugin.Misc.PurchaseOrderManager.Models
+namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
 {
     public record PurchaseOrderModel : BaseNopEntityModel
     {
