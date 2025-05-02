@@ -80,13 +80,15 @@ else
 							{
 							Title = T("Admin.Catalog.Products.Fields.Price").Text,
 							Width = "100",
-							Render = new RenderCustom("renderPrice")
+							Render = new RenderCustom("renderPrice"),
+							ClassName="d-none"
 							},
 							new ColumnProperty("Quantity")
 							{
 							Title = T("Admin.PurchaseOrders.Fields.Quantity").Text,
 							Width = "100",
-							Render = new RenderCustom("renderQuantity")
+							Render = new RenderCustom("renderQuantity"),
+							ClassName="d-none"
 							}
 							}
   })
@@ -103,7 +105,7 @@ else
 							<div class="card-footer">
 								<button type="button" class="btn btn-primary" onclick="addSelectedProducts()">
 									<i class="fa fa-plus"></i>
-									@T("Admin.PurchaseOrders.AddSelectedProducts")
+									@T("Admin.Common.Save")
 								</button>
 								<script>
 																	function addSelectedProducts() {

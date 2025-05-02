@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Domain;
@@ -11,6 +12,7 @@ using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models;
 using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Services;
 using Nop.Plugin.Misc.PurchaseOrderManager.Models;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Models.Extensions;
@@ -23,17 +25,20 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
         private readonly ISupplierService _supplierService;
         private readonly ICustomerService _customerService;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IProductService _productService;
 
         public PurchaseOrderModelFactory(
             IPurchaseOrderService purchaseOrderService,
             ISupplierService supplierService,
             ICustomerService customerService,
-            IStaticCacheManager staticCacheManager)
+            IStaticCacheManager staticCacheManager,
+            IProductService productService)
         {
             _purchaseOrderService = purchaseOrderService;
             _supplierService = supplierService;
             _customerService = customerService;
             _staticCacheManager = staticCacheManager;
+            _productService = productService;
         }
 
         public async Task<PurchaseOrderSearchModel> PreparePurchaseOrderSearchModelAsync(PurchaseOrderSearchModel searchModel)
@@ -148,31 +153,59 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
 
         public async Task<ProductListModel> PrepareSupplierProductListModelAsync(AddProductToPurchaseOrderSearchModel searchModel)
         {
-            var products = await _purchaseOrderService.GetProductsBySupplierIdAsync(
-                supplierId: searchModel.SupplierId,
-                pageIndex: searchModel.Page - 1,
-                pageSize: searchModel.PageSize);
+            // Get product IDs for the selected supplier
+            var supplierProductIds = await _purchaseOrderService.GetProductIdBySupplierIdAsync(searchModel.SupplierId);
 
-            var model = await ModelExtensions.PrepareToGridAsync<ProductListModel, ProductModel, ProductModel>(
-                new ProductListModel(),
-                searchModel,
-                products,
-                () =>
+            // Search all products matching filter criteria
+            var allProducts = await _productService.SearchProductsAsync(
+                categoryIds: searchModel.SearchCategoryId > 0 ? new List<int> { searchModel.SearchCategoryId } : null,
+                keywords: !string.IsNullOrEmpty(searchModel.SearchSku) ? searchModel.SearchSku : searchModel.SearchProductName,
+                searchSku: !string.IsNullOrEmpty(searchModel.SearchSku),
+                pageIndex: 0, // fetch all for manual filtering
+                pageSize: int.MaxValue
+            );
+
+            // Filter only supplier's products
+            var filteredProducts = allProducts.Where(p => supplierProductIds.Contains(p.Id)).ToList();
+
+            // Paginate manually
+            var pagedProducts = new PagedList<Product>(
+                filteredProducts.Skip((searchModel.Page - 1) * searchModel.PageSize).Take(searchModel.PageSize).ToList(),
+                searchModel.Page - 1,
+                searchModel.PageSize,
+                filteredProducts.Count
+            );
+
+            // Convert to ProductModel
+            var productModels = await pagedProducts.SelectAwait(async product =>
+            {
+                var productModel = new ProductModel
                 {
-                    return products.Select(product => new ProductModel
-                    {
-                        Id = product.Id,
-                        Name = product.Name,
-                        Sku = product.Sku,
-                        StockQuantity=product.StockQuantity,
-                        Price = product.Price
-                    }).ToAsyncEnumerable();
-                });
+                    Id = product.Id,
+                    Name = product.Name,
+                    Sku = product.Sku,
+                    StockQuantity = product.StockQuantity,
+                    Price = product.Price
+                };
+                return productModel;
+            }).ToListAsync();
 
+            var pagedProductModels = new PagedList<ProductModel>(
+                productModels,
+                pagedProducts.PageIndex,
+                pagedProducts.PageSize,
+                pagedProducts.TotalCount);
 
+            // Prepare grid
+            var model = await new ProductListModel().PrepareToGridAsync(
+                searchModel,
+                pagedProductModels,
+                () => pagedProductModels.ToAsyncEnumerable());
 
             return model;
         }
+
+
 
         //public async Task<PurchaseOrderItemsListModel> PreparePurchaseOrderItemsListModelAsync(int purchaseOrderId)
         //{

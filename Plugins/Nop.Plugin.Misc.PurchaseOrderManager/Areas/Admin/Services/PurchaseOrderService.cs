@@ -144,7 +144,7 @@ public class PurchaseOrderService : IPurchaseOrderService
             .ToListAsync();
     }
 
-    public async Task<IPagedList<ProductModel>> GetProductsBySupplierIdAsync(int supplierId, int pageIndex = 0, int pageSize = int.MaxValue)
+    public async Task<List<int>> GetProductIdBySupplierIdAsync(int supplierId)
     {
         // Step 1: Get all ProductIds from ProductSupplierMapping table for the given supplierId
         var productIds = await _productSupplierMapping.Table
@@ -152,19 +152,7 @@ public class PurchaseOrderService : IPurchaseOrderService
             .Select(psm => psm.ProductId) // Select the ProductIds
             .ToListAsync();
 
-        // Step 2: Use the ProductIds to get the details of the products from the Product table
-        var query = _productRepository.Table
-            .Where(p => productIds.Contains(p.Id)) // Filter products by the retrieved ProductIds
-            .Select(p => new ProductModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Sku = p.Sku,
-                StockQuantity=p.StockQuantity,
-                Price = p.Price
-            });
-
-        return await query.ToPagedListAsync(pageIndex, pageSize);
+        return productIds;
     }
     public async Task<IList<PurchaseOrderItemModel>> GetItemsByOrderIdAsync(int orderId)
     {
@@ -281,7 +269,7 @@ public class PurchaseOrderService : IPurchaseOrderService
         var json = JsonConvert.SerializeObject(items);
         _httpContextAccessor.HttpContext.Session.SetString(TempOrderSessionKey, json);
     }
-    public void ClearSessionItems()
+    public async Task ClearSessionItems()
     {
         _httpContextAccessor.HttpContext.Session.Remove(TempOrderSessionKey);
     }

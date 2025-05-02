@@ -81,15 +81,14 @@ public class PurchaseOrderController : BasePluginController
         return Json(model);
     }
 
-    public async  Task<IActionResult> Create()
+    public async Task<IActionResult> Create()
     {
-
-        var model = await  _purchaseOrderModelFactory.PreparePurchaseOrderWithSuppliersModelAsync();
-
-        _purchaseOrderService.ClearSessionItems();
+        var model = await _purchaseOrderModelFactory.PreparePurchaseOrderWithSuppliersModelAsync();
 
         return View("~/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Areas/Admin/Views/PurchaseOrder/Create.cshtml", model);
     }
+
+
 
     [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
     public async Task<IActionResult> Create(PurchaseOrderModel model, bool continueEditing)
@@ -124,9 +123,9 @@ public class PurchaseOrderController : BasePluginController
                     Id = item.ProductId,
                     StockQuantity = item.Quantity
                 };
-                _purchaseOrderService.UpdateProductStockQuantity(productModel);
+                await _purchaseOrderService.UpdateProductStockQuantity(productModel);
             }
-            _purchaseOrderService.ClearSessionItems();
+            await _purchaseOrderService.ClearSessionItems();
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.PurchaseOrders.Added"));
             return continueEditing ? RedirectToAction("Edit", new { id = purchaseOrder.Id }) : RedirectToAction("Index");
@@ -137,18 +136,37 @@ public class PurchaseOrderController : BasePluginController
     }
     public async Task<IActionResult> AddProductPopup(int supplierId, string btnId, string formId)
     {
-
         var model = new AddProductToPurchaseOrderSearchModel
         {
             SupplierId = supplierId,
-            SelectedProductIds = new List<int>()
+            SelectedProductIds = new List<int>(),
+            AvailablePageSizes = "10, 15, 20, 50, 100"
         };
+
+        // Populate available categories
+        var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true);
+        foreach (var category in categories)
+        {
+            model.AvailableCategories.Add(new SelectListItem
+            {
+                Text = category.Name,
+                Value = category.Id.ToString()
+            });
+        }
+
+        // Insert "All" at the top
+        model.AvailableCategories.Insert(0, new SelectListItem
+        {
+            Text = await _localizationService.GetResourceAsync("Admin.Common.All"),
+            Value = "0"
+        });
 
         ViewBag.btnId = btnId;
         ViewBag.formId = formId;
 
         return View("~/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Areas/Admin/Views/PurchaseOrder/AddProductPopup.cshtml", model);
     }
+
 
     [HttpPost]
     public async Task<IActionResult> ProductListForPurchaseOrder(AddProductToPurchaseOrderSearchModel searchModel)
@@ -214,19 +232,20 @@ public class PurchaseOrderController : BasePluginController
         return PartialView("~/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Areas/Admin/Views/PurchaseOrder/_PurchaseOrderItems.cshtml", model);
     }
 
-    [HttpGet]
-    public IActionResult ViewTempPurchaseOrderItems()
-    {
-        var items = _purchaseOrderService.GetSessionItems(); // make this method public for test
-        return Json(items);
-    }
+        [HttpGet]
+        public IActionResult ViewTempPurchaseOrderItems()
+            {
+            var items = _purchaseOrderService.GetSessionItems(); // make this method public for test
+            return Ok(new DataTablesModel { Data = items });
+            //return Json(items);
+        }
 
 
     [HttpPost]
     public async Task<IActionResult> DeletePurchaseOrderItem(int productId)
     {
         var items = _purchaseOrderService.GetSessionItems();
-        _purchaseOrderService.ClearSessionItems();
+        await _purchaseOrderService.ClearSessionItems();
         var itemToRemove = items.FirstOrDefault(x => x.ProductId == productId);
         if (itemToRemove != null)
         {
@@ -340,7 +359,7 @@ public class PurchaseOrderController : BasePluginController
             }
 
             // Optionally clear session (if using it in edit too)
-            _purchaseOrderService.ClearSessionItems();
+            await _purchaseOrderService.ClearSessionItems();
 
             _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.PurchaseOrders.Updated"));
             return continueEditing ? RedirectToAction("Edit", new { id = purchaseOrder.Id }) : RedirectToAction("Index");
@@ -348,6 +367,23 @@ public class PurchaseOrderController : BasePluginController
 
         return View("~/Plugins/Nop.Plugin.Misc.PurchaseOrderManager/Areas/Admin/Views/PurchaseOrder/Edit.cshtml", model);
     }
+
+    [HttpPost]
+    public IActionResult UpdatePurchaseOrderItem(int productId, int quantity, decimal unitCost)
+    {
+        var items = _purchaseOrderService.GetSessionItems();
+        var item = items?.FirstOrDefault(x => x.ProductId == productId);
+        if (item != null)
+        {
+            item.Quantity = quantity;
+            item.UnitCost = unitCost;
+            item.LineTotal = quantity * unitCost;
+        }
+        _purchaseOrderService.SaveSessionItems(items);
+        return Json(new { success = true });
+
+    }
+
 
     [HttpPost]
     public async Task<IActionResult> Delete(int Id)
@@ -366,7 +402,7 @@ public class PurchaseOrderController : BasePluginController
             await _purchaseOrderService.DeletePurchaseOrderProductAsync(product);
         }
 
-        _purchaseOrderService.DeletePurchaseOrderAsync(purchaseOrder);
+        await _purchaseOrderService.DeletePurchaseOrderAsync(purchaseOrder);
         _notificationService.SuccessNotification("Purchase Order Deleted Successfully..");
 
         // Redirect back to the purchase order edit page
@@ -374,9 +410,9 @@ public class PurchaseOrderController : BasePluginController
     }
 
     [HttpPost]
-    public IActionResult ClearSession()
+    public async Task<IActionResult> ClearSession()
     {
-        _purchaseOrderService.ClearSessionItems(); // This calls your service method
+        await _purchaseOrderService.ClearSessionItems(); // This calls your service method
         return Ok();
     }
 

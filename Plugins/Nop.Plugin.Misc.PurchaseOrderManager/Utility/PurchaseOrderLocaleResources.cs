@@ -36,8 +36,8 @@ public static class PurchaseOrderLocaleResources
         ["Admin.PurchaseOrders.List.SearchEndDate.Hint"] = "Search orders created before this date",
 
         // Form Fields
-        ["Admin.Purchaseorders.Fields.Id"]="Order#",
-        ["Admin.Purchaseorders.Fields.Createdonutc"]="Created on",
+        ["Admin.PurchaseOrders.Fields.Id"] = "Order#",
+        ["Admin.PurchaseOrders.Fields.CreatedOnUtc"] = "Created on",
         ["Admin.PurchaseOrders.Fields.Supplier"] = "Supplier",
         ["Admin.PurchaseOrders.Fields.Supplier.Hint"] = "Select the supplier for this order",
         ["Admin.PurchaseOrders.Fields.OrderDate"] = "Order Date",
@@ -50,24 +50,28 @@ public static class PurchaseOrderLocaleResources
         ["Admin.PurchaseOrders.Fields.Status.Hint"] = "Current status of the order",
 
         // Product Fields
+        ["Admin.PurchaseOrders.Fields.Product"] = "Product",
         ["Admin.PurchaseOrders.Fields.Product.Name"] = "Product",
         ["Admin.PurchaseOrders.Fields.Product.Name.Hint"] = "Select product to order",
-        ["Admin.PurchaseOrders.Fields.Product.Quantity"] = "Quantity",
-        ["Admin.PurchaseOrders.Fields.Product.Quantity.Hint"] = "Enter quantity to order",
-        ["Admin.PurchaseOrders.Fields.Product.UnitCost"] = "Unit Cost",
-        ["Admin.PurchaseOrders.Fields.Product.UnitCost.Hint"] = "Cost per unit from supplier",
-        ["Admin.PurchaseOrders.Fields.Product.Total"] = "Line Total",
-        ["Admin.PurchaseOrders.Fields.Product.Total.Hint"] = "Quantity × Unit Cost",
+        ["Admin.PurchaseOrders.Fields.SKU"] = "SKU",
+        ["Admin.PurchaseOrders.Fields.Quantity"] = "Quantity",
+        ["Admin.PurchaseOrders.Fields.Quantity.Hint"] = "Enter quantity to order",
+        ["Admin.PurchaseOrders.Fields.UnitCost"] = "Unit Cost",
+        ["Admin.PurchaseOrders.Fields.UnitCost.Hint"] = "Cost per unit from supplier",
+        ["Admin.PurchaseOrders.Fields.LineTotal"] = "Line Total",
+        ["Admin.PurchaseOrders.Fields.LineTotal.Hint"] = "Quantity × Unit Cost",
 
         // Actions
         ["Admin.PurchaseOrders.AddProduct"] = "Add Product",
         ["Admin.PurchaseOrders.RemoveProduct"] = "Remove",
         ["Admin.PurchaseOrders.Save"] = "Save Order",
         ["Admin.PurchaseOrders.Cancel"] = "Cancel",
+        ["Admin.PurchaseOrders.Edit"] = "Edit",
 
         // Widget/Help Text
         ["Admin.PurchaseOrder.Widget"] = "Purchase Orders",
         ["Admin.PurchaseOrder.Widget.Description"] = "Purchase orders allow you to track inventory purchases from suppliers. Create purchase orders to manage your inventory replenishment and maintain records of supplier transactions.",
-        ["Admin.PurchaseOrder.Widget.Message"] = "You need to select a supplier before adding products to the order"
+        ["Admin.PurchaseOrder.Widget.Message"] = "You need to select a supplier before adding products to the order",
+        ["Admin.Purchaseorders.Items"]="Purchase Order Products"
     };
 }

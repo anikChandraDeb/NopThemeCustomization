@@ -13,7 +13,7 @@
 			@T("Admin.PurchaseOrders.AddNew")
 			<small>
 				<i class="fas fa-arrow-circle-left"></i>
-				<a asp-action="List">@T("Admin.Common.BackToList")</a>
+				<a asp-action="Index">@T("Admin.Common.BackToList")</a>
 			</small>
 		</h1>
 		<div class="float-right">
@@ -45,14 +45,6 @@
 									<span asp-validation-for="SupplierId"></span>
 								</div>
 							</div>
-							<div class="form-group row">
-								<div class="col-md-3">
-									<nop-label asp-for="OrderDate" />
-								</div>
-								<div class="col-md-9">
-									<nop-editor asp-for="OrderDate" />
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -60,7 +52,7 @@
 				<!-- Second Card -->
 				<div>
 					<div class="card card-default">
-						<div class="card-heading">
+						<div class="card-heading" style="padding: 10px;">
 							@T("Admin.PurchaseOrders.Items")
 						</div>
 						<div class="card-body" id="purchaseorderitems-container">
@@ -128,17 +120,18 @@
 									});
 								});
 							</script>
-							<script>
-								window.addEventListener('beforeunload', function () {
-									const currentUrl = window.location.href;
 
-									// Only clear cache if we are NOT going to 'Create' or staying on the same page
-									if (!currentUrl.includes('/PurchaseOrder/Create') && !currentUrl.includes('/PurchaseOrder/AddProductPopup')) {
-										const url = '@Url.Action("ClearCreateCache", "PurchaseOrder")';
-										navigator.sendBeacon(url);
-									}
-								});
+							<script>
+								let isRefresh = performance.navigation.type === performance.navigation.TYPE_RELOAD;
+
+								if (!isRefresh) {
+									//Send a beacon to notify it's a fresh navigation (not refresh)
+									navigator.sendBeacon("/Admin/PurchaseOrder/ClearSession");
+								} else {
+									console.log("Page refreshed, not clearing session.");
+								}
 							</script>
+
 						</div>
 					</div>
 				</div>

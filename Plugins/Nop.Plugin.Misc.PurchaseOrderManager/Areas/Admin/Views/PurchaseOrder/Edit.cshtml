@@ -13,7 +13,7 @@
 			@T("Admin.PurchaseOrders.Edit")
 			<small>
 				<i class="fas fa-arrow-circle-left"></i>
-				<a asp-action="List">@T("Admin.Common.BackToList")</a>
+				<a asp-action="Index">@T("Admin.Common.BackToList")</a>
 			</small>
 		</h1>
 		<div class="float-right">
@@ -50,15 +50,6 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
-								<div class="col-md-3">
-									<nop-label asp-for="OrderDate" />
-								</div>
-								<div class="col-md-9">
-									<nop-editor asp-for="OrderDate" />
-									<span asp-validation-for="OrderDate"></span>
-								</div>
-							</div>
 
 							<!-- Hidden fields for required properties -->
 							<input type="hidden" asp-for="CreatedById" />
@@ -70,7 +61,7 @@
 				<!-- Second Card -->
 				<div>
 					<div class="card card-default">
-						<div class="card-heading">
+						<div class="card-heading" style="padding: 10px;">
 							@T("Admin.PurchaseOrders.Items")
 						</div>
 						<div class="card-body" id="purchaseorderitems-container">

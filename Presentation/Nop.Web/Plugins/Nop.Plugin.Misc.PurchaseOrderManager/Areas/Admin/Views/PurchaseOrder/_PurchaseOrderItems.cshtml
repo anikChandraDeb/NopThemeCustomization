@@ -1,127 +1,188 @@
 ﻿@using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
 @model PurchaseOrderModel
 
-<form asp-controller="PurchaseOrder" asp-action="UpdateItems" method="post">
-	@if (Model.Items.Count > 0)
-	{
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="card card-default">
-						<div class="card-heading">
-							<h3 class="card-title">@T("Admin.PurchaseOrders.PurchaseOrderItems")</h3>
-						</div>
-						<div class="card-body table-responsive">
-							<table class="table table-bordered table-striped">
-								<thead>
+
+@if (Model.Items.Count > 0)
+{
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card card-default">
+					<div class="card-body table-responsive">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>@T("Admin.PurchaseOrders.Fields.Product")</th>
+									<th>@T("Admin.PurchaseOrders.Fields.Sku")</th>
+									<th class="text-center">@T("Admin.PurchaseOrders.Fields.Quantity")</th>
+									<th class="text-center">@T("Admin.PurchaseOrders.Fields.UnitCost")</th>
+									<th class="text-center">@T("Admin.PurchaseOrders.Fields.LineTotal")</th>
+									<th class="text-center">@T("Admin.Common.Edit")</th>
+									<th class="text-center">@T("Admin.Common.Delete")</th>
+								</tr>
+							</thead>
+							<tbody>
+								@for (int i = 0; i < Model.Items.Count; i++)
+								{
 									<tr>
-										<th>@T("Admin.PurchaseOrders.Fields.Product")</th>
-										<th>@T("Admin.PurchaseOrders.Fields.Sku")</th>
-										<th class="text-center">@T("Admin.PurchaseOrders.Fields.Quantity")</th>
-										<th class="text-center">@T("Admin.PurchaseOrders.Fields.UnitCost")</th>
-										<th class="text-center">@T("Admin.PurchaseOrders.Fields.LineTotal")</th>
-										<th class="text-center">@T("Admin.Common.Delete")</th>
-									</tr>
-								</thead>
-								<tbody>
-									@for (int i = 0; i < Model.Items.Count; i++)
-									{
-										<tr>
-											<td>
-												@Model.Items[i].ProductName
-												<input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
-												<input type="hidden" name="Items[@i].ProductName" value="@Model.Items[i].ProductName" />
-												<input type="hidden" name="Items[@i].ProductId" value="@Model.Items[i].ProductId" />
-											</td>
-											<td>
-												@Model.Items[i].Sku
-												<input type="hidden" name="Items[@i].Sku" value="@Model.Items[i].Sku" />
-											</td>
-											<td class="text-center">
-												<input type="number" name="Items[@i].Quantity" value="@Model.Items[i].Quantity" class="form-control quantity" data-index="@i" />
-											</td>
-											<td class="text-center">
-												<input type="number" name="Items[@i].UnitCost" value="@Model.Items[i].UnitCost" class="form-control unit-cost" data-index="@i" />
-											</td>
-											<td class="text-center">
-												<span class="line-total" id="LineTotal_@i">@Model.Items[i].LineTotal.ToString("F2")</span>
-											</td>
-											<td class="text-center">
-												<button type="button" class="btn btn-danger btn-sm delete-item" data-id="@Model.Items[i].ProductId">
-													@T("Admin.Common.Delete")
-												</button>
-											</td>
-										</tr>
-									}
-								</tbody>
-							</table>
-						</div>
-						<div class="card-footer">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="form-group row">
-										<div class="col-md-6">
-											<label>@T("Admin.PurchaseOrders.Fields.TotalAmount")</label>
-										</div>
-										<div class="col-md-6">
-											<div class="form-text-row">
-												<span id="TotalAmountDisplay">@Model.TotalAmount.ToString("F2")</span>
-												<input type="hidden" asp-for="TotalAmount" />
+										<td>
+											@Model.Items[i].ProductName
+											<input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
+											<input type="hidden" name="Items[@i].ProductName" value="@Model.Items[i].ProductName" />
+											<input type="hidden" class="product-id" name="Items[@i].ProductId" value="@Model.Items[i].ProductId" />
+										</td>
+										<td>
+											@Model.Items[i].Sku
+											<input type="hidden" name="Items[@i].Sku" value="@Model.Items[i].Sku" />
+										</td>
+										<td class="text-center">
+											<span class="view-mode">@Model.Items[i].Quantity</span>
+											<input type="number" name="Items[@i].Quantity" value="@Model.Items[i].Quantity" class="form-control edit-mode d-none quantity-input" data-index="@i" />
+										</td>
+										<td class="text-center">
+											<span class="view-mode">@Model.Items[i].UnitCost.ToString("F2")</span>
+											<input type="number" name="Items[@i].UnitCost" value="@Model.Items[i].UnitCost" class="form-control edit-mode d-none unitcost-input" data-index="@i" />
+										</td>
+										<td class="text-center">
+											<span class="line-total" id="LineTotal_@i">@Model.Items[i].LineTotal.ToString("F2")</span>
+										</td>
+										<td class="text-center">
+											<div class="view-mode">
+												<button type="button" class="btn btn-primary btn-sm edit-item" style="background:#F4F4F4;color: black;"><i class="fa fa-pencil"></i>Edit</button>
 											</div>
+											<div class="edit-mode d-none">
+												<button type="button" class="btn btn-primary btn-sm update-item" data-index="@i" style="background:#F4F4F4;color: black;">✔ Update</button>
+												<button type="button" class="btn btn-primary btn-sm cancel-edit" style="background:#F4F4F4;color: black;">✖ Cancel</button>
+											</div>
+										</td>
+										<td class="text-center">
+											<button type="button" class="btn btn-primary btn-sm delete-item" data-id="@Model.Items[i].ProductId" style="background:#F4F4F4;color: black;"><i class="fa fa-trash"></i>Delete</button>
+										</td>
+									</tr>
+								}
+
+
+							</tbody>
+						</table>
+					</div>
+					<div class="card-footer">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group row">
+									<div class="col-md-6">
+										<label>@T("Admin.PurchaseOrders.Fields.TotalAmount")</label>
+									</div>
+									<div class="col-md-6">
+										<div class="form-text-row">
+											<span id="TotalAmountDisplay">@Model.TotalAmount.ToString("F2")</span>
+											<input type="hidden" asp-for="TotalAmount" />
 										</div>
 									</div>
 								</div>
 							</div>
-
 						</div>
+
 					</div>
 				</div>
 			</div>
 		</div>
-	}
-	else
-	{
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<h4>No Products Selected..</h4>
-				</div>
+	</div>
+}
+else
+{
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<h4>No Products Selected..</h4>
 			</div>
 		</div>
-	}
-</form>
+	</div>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-	$(document).ready(function() {
-		// Calculate line total when quantity or price changes
-		function calculateLineTotal(index) {
-			var quantity = parseFloat($('input[name="Items[' + index + '].Quantity"]').val()) || 0;
-			var unitCost = parseFloat($('input[name="Items[' + index + '].UnitCost"]').val()) || 0;
-			var lineTotal = quantity * unitCost;
+	$(document).ready(function () {
+		let originalValues = {};
 
-			$('#LineTotal_' + index).text(lineTotal.toFixed(2));
-			return lineTotal;
-		}
+		// Edit
+		$('.edit-item').on('click', function () {
+			const $row = $(this).closest('tr');
+			const index = $row.find('.quantity-input').data('index');
 
-		// Calculate total amount for all items
-		function calculateTotalAmount() {
-			var total = 0;
-			$('[id^="LineTotal_"]').each(function() {
-				var index = this.id.split('_')[1];
-				total += calculateLineTotal(index);
-			});
+			originalValues[index] = {
+				quantity: $row.find('.quantity-input').val(),
+				unitCost: $row.find('.unitcost-input').val()
+			};
 
-			$('#TotalAmountDisplay').text(total.toFixed(2));
-			$('input[name="TotalAmount"]').val(total.toFixed(2));
-		}
+			$row.find('.quantity-view, .unitcost-view').addClass('d-none');
+			$row.find('.quantity-input, .unitcost-input').removeClass('d-none');
+			$row.find('.view-mode').addClass('d-none');
+			$row.find('.edit-mode').removeClass('d-none');
 
-		// Update calculations on input change (works while typing)
-		$(document).on('input', '.quantity, .unit-cost', function() {
-			var index = $(this).data('index');
-			calculateLineTotal(index);
-			calculateTotalAmount();
+
 		});
 
-		// Initial calculation on page load
-		calculateTotalAmount();
+		// Cancel
+		$('.cancel-edit').on('click', function () {
+			const $row = $(this).closest('tr');
+			const index = $(this).data('index');
+
+			if (originalValues[index]) {
+				$row.find('.quantity-input').val(originalValues[index].quantity);
+				$row.find('.unitcost-input').val(originalValues[index].unitCost);
+			}
+
+			$row.find('.quantity-view, .unitcost-view').removeClass('d-none');
+			$row.find('.quantity-input, .unitcost-input').addClass('d-none');
+			$row.find('.edit-mode').addClass('d-none');
+			$row.find('.view-mode').removeClass('d-none');
+		});
+
+			$('.update-item').on('click', function () {
+		const $row = $(this).closest('tr');
+		const index = $(this).data('index');
+		const productId = $row.find('.product-id').val();
+
+		console.log("ProductId:", productId); // Debug
+
+		const quantity = parseFloat($row.find('.quantity-input').val()) || 0;
+		const unitCost = parseFloat($row.find('.unitcost-input').val()) || 0;
+
+		$.ajax({
+			url: '@Url.Action("UpdatePurchaseOrderItem", "PurchaseOrder")',
+			type: 'POST',
+			data: {
+				productId: productId,
+				quantity: quantity,
+				unitCost: unitCost
+			},
+			success: function (response) {
+				console.log("Response:", response);
+				if (response.success) {
+					// const lineTotal = (quantity * unitCost).toFixed(2);
+
+					// $row.find('.quantity-view').text(quantity);
+					// $row.find('.unitcost-view').text(unitCost.toFixed(2));
+					// $row.find('.line-total').text(lineTotal);
+
+					// $row.find('.quantity-view, .unitcost-view').removeClass('d-none');
+					// $row.find('.quantity-input, .unitcost-input').addClass('d-none');
+					// $row.find('.edit-mode').addClass('d-none');
+					// $row.find('.view-mode').removeClass('d-none');
+					refreshPurchaseOrderItems();
+				} else {
+					alert("Update failed.");
+				}
+			},
+			error: function () {
+				alert("Server error. Try again.");
+			}
+		});
+	});
+
 	});
 </script>
+
+
+

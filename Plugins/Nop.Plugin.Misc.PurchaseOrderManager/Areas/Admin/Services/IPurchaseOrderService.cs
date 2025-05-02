@@ -23,7 +23,7 @@ public interface IPurchaseOrderService
     Task DeletePurchaseOrderProductAsync(PurchaseOrderProduct product);
     Task<PurchaseOrderProduct> GetPurchaseOrderProductByIdAsync(int id);
     Task<IList<PurchaseOrderProduct>> GetProductsByPurchaseOrderIdAsync(int purchaseOrderId);
-    Task<IPagedList<ProductModel>> GetProductsBySupplierIdAsync(int supplierId, int pageIndex = 0, int pageSize = int.MaxValue);
+    Task<List<int>> GetProductIdBySupplierIdAsync(int supplierId);
     Task<IList<PurchaseOrderItemModel>> GetItemsByOrderIdAsync(int orderId);
     Task UpdateProductStockQuantity(ProductModel product);
     Task AssignProductStockQuantity(ProductModel product);
@@ -31,6 +31,6 @@ public interface IPurchaseOrderService
     Task<List<PurchaseOrderItemModel>> GetTempPurchaseOrderItemsAsync();
     List<PurchaseOrderItemModel> GetSessionItems();
     void SaveSessionItems(List<PurchaseOrderItemModel> items);
-    void ClearSessionItems();
+    Task ClearSessionItems();
     Task<ProductModel> GetProductByIdAsync(int id);
 }
