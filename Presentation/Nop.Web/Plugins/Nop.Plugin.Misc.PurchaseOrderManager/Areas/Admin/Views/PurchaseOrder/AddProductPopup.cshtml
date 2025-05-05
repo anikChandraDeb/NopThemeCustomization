@@ -35,24 +35,84 @@ else
 			<div class="container-fluid">
 				<div class="form-horizontal">
 					<div class="cards-group">
+
+
+						<!-- Search Panel -->
+						<div class="card card-default card-search">
+							<div class="card-body">
+
+								<!-- Search Body -->
+								<div class="search-body">
+									<!-- Row 1: Product Name and SKU -->
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<div class="col-md-4">
+													<nop-label asp-for="SearchProductName" asp-resource-key="Admin.Catalog.Products.Fields.Name" />
+												</div>
+												<div class="col-md-8">
+													<nop-editor asp-for="SearchProductName" />
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group row">
+												<div class="col-md-4">
+													<nop-label asp-for="SearchSku" asp-resource-key="Admin.Catalog.Products.Fields.Sku" />
+												</div>
+												<div class="col-md-8">
+													<nop-editor asp-for="SearchSku" />
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Row 2: Category -->
+									<div class="row">
+										<div class="col-md-6">
+											<div class="form-group row">
+												<div class="col-md-4">
+													<nop-label asp-for="SearchCategoryId" asp-resource-key="Admin.Catalog.Products.Fields.Category" />
+												</div>
+												<div class="col-md-8">
+													<nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Row 3: Search Button -->
+									<div class="row">
+										<div class="text-center col-12">
+											<button type="submit" id="search-products" class="btn btn-primary btn-search">
+												<i class="fas fa-magnifying-glass"></i> @T("Admin.Common.Search")
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
 						<div class="card card-default">
 							<div class="card-body">
-								@await Html.PartialAsync("Table", new DataTablesModel
-  {
-	  Name = "products-grid",
-	  UrlRead = new DataUrl("ProductListForPurchaseOrder", "PurchaseOrder", null),
-	  SearchButtonId = "search-products",
-	  Length = Model.PageSize,
-	  LengthMenu = Model.AvailablePageSizes,
-	  Filters =
+							@await Html.PartialAsync("Table", new DataTablesModel
+						   {
+							  Name = "products-grid",
+							  UrlRead = new DataUrl("ProductListForPurchaseOrder", "PurchaseOrder", null),
+							  SearchButtonId = "search-products",
+							  Length = Model.PageSize,
+							  LengthMenu = Model.AvailablePageSizes,
+							  Filters =
 							new List<FilterParameter>
 							{
-							// new FilterParameter(nameof(Model.SearchProductName)),
-							// new FilterParameter(nameof(Model.SearchSku)),
-							// new FilterParameter(nameof(Model.SearchCategoryId)),
+							new FilterParameter(nameof(Model.SearchProductName)),
+							new FilterParameter(nameof(Model.SearchSku)),
+							new FilterParameter(nameof(Model.SearchCategoryId)),
 							new FilterParameter(nameof(Model.SupplierId))
 							},
-	  ColumnCollection = new List<ColumnProperty>
+							ColumnCollection = new List<ColumnProperty>
 							{
 							new ColumnProperty(nameof(ProductModel.Id))
 							{

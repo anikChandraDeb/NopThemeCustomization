@@ -72,6 +72,7 @@ public static class PurchaseOrderLocaleResources
         ["Admin.PurchaseOrder.Widget"] = "Purchase Orders",
         ["Admin.PurchaseOrder.Widget.Description"] = "Purchase orders allow you to track inventory purchases from suppliers. Create purchase orders to manage your inventory replenishment and maintain records of supplier transactions.",
         ["Admin.PurchaseOrder.Widget.Message"] = "You need to select a supplier before adding products to the order",
-        ["Admin.Purchaseorders.Items"]="Purchase Order Products"
+        ["Admin.Purchaseorders.Items"]="Purchase Order Products",
+        ["Admin.Catalog.Products.Fields.Category"]="Category"
     };
 }

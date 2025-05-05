@@ -8,6 +8,7 @@ using Nop.Plugin.Misc.PurchaseOrderManager.Services;
 using Nop.Plugin.Misc.Supplier.Areas.Admin.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Models.Extensions;
 
@@ -20,19 +21,28 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
         private readonly ICustomerService _customerService;
         private readonly IStaticCacheManager _staticCacheManager;
         private readonly IProductService _productService;
+        private readonly IWorkContext _workContext;
+        private readonly ICategoryService _categoryService;
+        private readonly ILocalizationService _localizationService;
 
         public PurchaseOrderModelFactory(
             IPurchaseOrderService purchaseOrderService,
             ISupplierService supplierService,
             ICustomerService customerService,
             IStaticCacheManager staticCacheManager,
-            IProductService productService)
+            IProductService productService,
+            IWorkContext workContext,
+            ICategoryService categoryService,
+            ILocalizationService localizationService)
         {
             _purchaseOrderService = purchaseOrderService;
             _supplierService = supplierService;
             _customerService = customerService;
             _staticCacheManager = staticCacheManager;
             _productService = productService;
+            _workContext = workContext;
+            _categoryService = categoryService;
+            _localizationService = localizationService;
         }
 
         public async Task<PurchaseOrderSearchModel> PreparePurchaseOrderSearchModelAsync(PurchaseOrderSearchModel searchModel)
@@ -40,7 +50,6 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
             if (searchModel == null)
                 searchModel = new PurchaseOrderSearchModel();
 
-            // Populate AvailableSuppliers
             var suppliers = await _supplierService.GetAllSuppliersAsync();
             foreach (var supplier in suppliers)
             {
@@ -115,31 +124,22 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
 
         public async Task<PurchaseOrderModel> PreparePurchaseOrderWithSuppliersModelAsync()
         {
-            // Create the PurchaseOrderModel instance
             var model = new PurchaseOrderModel
             {
                 OrderDate = DateTime.UtcNow
             };
 
-            // Fetch the list of suppliers
             var suppliers = await _supplierService.GetAllSuppliersAsync();
 
-            // Populate AvailableSuppliers
             model.AvailableSuppliers = suppliers.Select(supplier => new SelectListItem
             {
                 Value = supplier.Id.ToString(),
                 Text = supplier.Name
             }).ToList();
 
-            // Retrieve purchase order items from session
             var items = _purchaseOrderService.GetSessionItems(); // Assuming it returns List<PurchaseOrderItemModel>
             model.TotalAmount = items.Sum(item => item.LineTotal);
 
-            // Populate Items property
-            //model.Items = items;
-
-            // Clear session items after assigning to model
-            //_purchaseOrderService.ClearSessionItems();
             return model;
         }
 
@@ -147,22 +147,18 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
 
         public async Task<ProductListModel> PrepareSupplierProductListModelAsync(AddProductToPurchaseOrderSearchModel searchModel)
         {
-            // Get product IDs for the selected supplier
             var supplierProductIds = await _purchaseOrderService.GetProductIdBySupplierIdAsync(searchModel.SupplierId);
 
-            // Search all products matching filter criteria
             var allProducts = await _productService.SearchProductsAsync(
                 categoryIds: searchModel.SearchCategoryId > 0 ? new List<int> { searchModel.SearchCategoryId } : null,
                 keywords: !string.IsNullOrEmpty(searchModel.SearchSku) ? searchModel.SearchSku : searchModel.SearchProductName,
                 searchSku: !string.IsNullOrEmpty(searchModel.SearchSku),
-                pageIndex: 0, // fetch all for manual filtering
+                pageIndex: 0, 
                 pageSize: int.MaxValue
             );
 
-            // Filter only supplier's products
             var filteredProducts = allProducts.Where(p => supplierProductIds.Contains(p.Id)).ToList();
 
-            // Paginate manually
             var pagedProducts = new PagedList<Product>(
                 filteredProducts.Skip((searchModel.Page - 1) * searchModel.PageSize).Take(searchModel.PageSize).ToList(),
                 searchModel.Page - 1,
@@ -170,7 +166,6 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
                 filteredProducts.Count
             );
 
-            // Convert to ProductModel
             var productModels = await pagedProducts.SelectAwait(async product =>
             {
                 var productModel = new ProductModel
@@ -190,7 +185,6 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
                 pagedProducts.PageSize,
                 pagedProducts.TotalCount);
 
-            // Prepare grid
             var model = await new ProductListModel().PrepareToGridAsync(
                 searchModel,
                 pagedProductModels,
@@ -199,32 +193,117 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
             return model;
         }
 
+        public async Task<PurchaseOrder> PreparePurchaseOrderAsync(PurchaseOrderModel model)
+        {
+            var currentCustomer = await _workContext.GetCurrentCustomerAsync();
 
+            return new PurchaseOrder
+            {
+                SupplierId = model.SupplierId,
+                CreatedOnUtc = model.OrderDate,
+                TotalAmount = model.TotalAmount,
+                CreatedById = currentCustomer.Id
+            };
+        }
 
-        //public async Task<PurchaseOrderItemsListModel> PreparePurchaseOrderItemsListModelAsync(int purchaseOrderId)
-        //{
-        //    var items = await _purchaseOrderService.GetItemsByPurchaseOrderIdAsync(purchaseOrderId);
+        public List<PurchaseOrderProduct> PrepareOrderItems(int purchaseOrderId, IList<PurchaseOrderItemModel> items)
+        {
+            return items.Select(item => new PurchaseOrderProduct
+            {
+                PurchaseOrderId = purchaseOrderId,
+                ProductId = item.ProductId,
+                Quantity = item.Quantity,
+                UnitCost = item.UnitCost,
+                LineTotal = item.LineTotal
+            }).ToList();
+        }
+        public async Task<AddProductToPurchaseOrderSearchModel> PrepareAddProductPopupModelAsync(int supplierId)
+        {
+            var model = new AddProductToPurchaseOrderSearchModel
+            {
+                SupplierId = supplierId,
+                SelectedProductIds = new List<int>(),
+                AvailablePageSizes = "10, 15, 20, 50, 100"
+            };
 
-        //    var model = await ModelExtensions.PrepareToGridAsync<PurchaseOrderItemsListModel, PurchaseOrderItemModel, PurchaseOrderItemModel>(
-        //        new PurchaseOrderItemsListModel(),
-        //        new AddProductToPurchaseOrderSearchModel(), // Adjust this model as necessary
-        //        items,
-        //        () =>
-        //        {
-        //            return items.Select(item => new PurchaseOrderItemModel
-        //            {
-        //                Id = item.Id,
-        //                ProductName = item.ProductName,
-        //                Sku = item.Sku,
-        //                Quantity = item.Quantity,
-        //                UnitCost = item.UnitCost,
-        //                LineTotal = item.LineTotal
-        //            }).ToAsyncEnumerable();
-        //        });
+            var categories = await _categoryService.GetAllCategoriesAsync(showHidden: true);
+            foreach (var category in categories)
+            {
+                model.AvailableCategories.Add(new SelectListItem
+                {
+                    Text = category.Name,
+                    Value = category.Id.ToString()
+                });
+            }
 
-        //    return model;
-        //}
+            model.AvailableCategories.Insert(0, new SelectListItem
+            {
+                Text = await _localizationService.GetResourceAsync("Admin.Common.All"),
+                Value = "0"
+            });
 
+            return model;
+        }
+        public async Task<IList<PurchaseOrderItemModel>> PrepareTempOrderItemsAsync(AddProductsRequest request)
+        {
+            var result = new List<PurchaseOrderItemModel>();
+
+            if (request?.SelectedIds == null)
+                return result;
+
+            foreach (var productId in request.SelectedIds)
+            {
+                var product = await _productService.GetProductByIdAsync(productId);
+                if (product == null)
+                    continue;
+
+                var quantity = request.Quantities?.TryGetValue(productId, out var qty) == true ? qty : 1;
+                var unitCost = request.Prices?.TryGetValue(productId, out var price) == true ? price : 0;
+
+                result.Add(new PurchaseOrderItemModel
+                {
+                    ProductId = productId,
+                    ProductName = product.Name,
+                    Sku = product.Sku,
+                    Quantity = quantity,
+                    UnitCost = unitCost,
+                    LineTotal = quantity * unitCost
+                });
+            }
+
+            return result;
+        }
+        public async Task<PurchaseOrderModel> PreparePurchaseOrderModelAsync(int id)
+        {
+            var purchaseOrder = await _purchaseOrderService.GetPurchaseOrderByIdAsync(id);
+            if (purchaseOrder == null)
+                return null;
+
+            var suppliers = await _supplierService.GetAllSuppliersAsync();
+            var supplier = suppliers.FirstOrDefault(s => s.Id == purchaseOrder.SupplierId);
+            var createdBy = await _customerService.GetCustomerByIdAsync(purchaseOrder.CreatedById);
+            var items = await _purchaseOrderService.GetItemsByOrderIdAsync(purchaseOrder.Id);
+
+            var model = new PurchaseOrderModel
+            {
+                Id = purchaseOrder.Id,
+                SupplierId = purchaseOrder.SupplierId,
+                SupplierName = supplier?.Name ?? "N/A",
+                OrderDate = purchaseOrder.CreatedOnUtc,
+                CreatedById = purchaseOrder.CreatedById,
+                CreatedBy = createdBy?.Email ?? "System",
+                AvailableSuppliers = suppliers.Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name
+                }).ToList(),
+                Items = items
+            };
+
+            _purchaseOrderService.SaveSessionItems((List<PurchaseOrderItemModel>)items);
+
+            return model;
+        }
 
     }
 }

@@ -62,7 +62,6 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
         public int SearchCategoryId { get; set; }
         public IList<SelectListItem> AvailableCategories { get; set; } = new List<SelectListItem>();
 
-        // Add this property for selected product IDs
         public IList<int> SelectedProductIds { get; set; } = new List<int>();
     }
 

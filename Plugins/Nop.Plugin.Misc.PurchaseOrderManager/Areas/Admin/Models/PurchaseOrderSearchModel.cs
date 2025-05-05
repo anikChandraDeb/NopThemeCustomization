@@ -28,6 +28,5 @@ public record PurchaseOrderSearchModel : BaseSearchModel
     [UIHint("DateNullable")]
     public DateTime? EndDate { get; set; }
 
-    // Explicitly declare the public property
     public IList<SelectListItem> AvailableSuppliers { get; set; }
 }

@@ -10,4 +10,9 @@ public interface IPurchaseOrderModelFactory
     Task<PurchaseOrderModel> PreparePurchaseOrderModelAsync(PurchaseOrderModel model, PurchaseOrder purchaseOrder);
     Task<PurchaseOrderModel> PreparePurchaseOrderWithSuppliersModelAsync();
     Task<ProductListModel> PrepareSupplierProductListModelAsync(AddProductToPurchaseOrderSearchModel searchModel);
+    Task<PurchaseOrder> PreparePurchaseOrderAsync(PurchaseOrderModel model);
+    List<PurchaseOrderProduct> PrepareOrderItems(int purchaseOrderId, IList<PurchaseOrderItemModel> items);
+    Task<AddProductToPurchaseOrderSearchModel> PrepareAddProductPopupModelAsync(int supplierId);
+    Task<IList<PurchaseOrderItemModel>> PrepareTempOrderItemsAsync(AddProductsRequest request);
+    Task<PurchaseOrderModel> PreparePurchaseOrderModelAsync(int id);
 }

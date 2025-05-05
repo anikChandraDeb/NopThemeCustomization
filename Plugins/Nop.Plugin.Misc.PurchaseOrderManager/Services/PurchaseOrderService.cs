@@ -140,10 +140,9 @@ public class PurchaseOrderService : IPurchaseOrderService
 
     public async Task<List<int>> GetProductIdBySupplierIdAsync(int supplierId)
     {
-        // Step 1: Get all ProductIds from ProductSupplierMapping table for the given supplierId
         var productIds = await _productSupplierMapping.Table
-            .Where(psm => psm.SupplierId == supplierId) // Filter by SupplierId
-            .Select(psm => psm.ProductId) // Select the ProductIds
+            .Where(psm => psm.SupplierId == supplierId) 
+            .Select(psm => psm.ProductId)
             .ToListAsync();
 
         return productIds;
@@ -187,6 +186,7 @@ public class PurchaseOrderService : IPurchaseOrderService
                     select po;
         return await query.ToListAsync();
     }
+
     //Product Inventory Udpate method
     public async Task UpdateProductStockQuantity(ProductModel product) {
         var productEntity = await _productRepository.GetByIdAsync(product.Id);
@@ -219,6 +219,7 @@ public class PurchaseOrderService : IPurchaseOrderService
         };
         return model;
     }
+
     //Session Method
     private const string TempOrderSessionKey = "TempPurchaseOrderItems";
 
