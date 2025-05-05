@@ -27,6 +27,8 @@
 									<tr>
 										<td>
 											@Model.Items[i].ProductName
+											<input type="hidden" id="purchase-order-item-count" value="@Model.Items.Count" />
+
 											<input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
 											<input type="hidden" name="Items[@i].ProductName" value="@Model.Items[i].ProductName" />
 											<input type="hidden" class="product-id" name="Items[@i].ProductId" value="@Model.Items[i].ProductId" />

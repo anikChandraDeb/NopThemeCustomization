@@ -89,7 +89,16 @@
 									url: '@Url.Action("GetPurchaseOrderItems", "PurchaseOrder")',
 									type: 'GET',
 									success: function (html) {
-									  $('#purchaseorderitems-container').html(html);
+										$('#purchaseorderitems-container').html(html);
+
+										// After loading partial view, check item count
+										const itemCount = parseInt($('#purchase-order-item-count').val() || "0");
+
+										if (itemCount > 0) {
+											$('#SupplierId').attr('disabled', 'disabled');
+										} else {
+											$('#SupplierId').removeAttr('disabled');
+										}
 									},
 									error: function (xhr) {
 									  alert('Error refreshing purchase order items: ' + xhr.responseText);
