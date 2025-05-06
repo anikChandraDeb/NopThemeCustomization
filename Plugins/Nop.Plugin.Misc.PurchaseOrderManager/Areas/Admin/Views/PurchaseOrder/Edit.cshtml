@@ -35,7 +35,24 @@
 	<div class="content">
 		<div class="container-fluid">
 			<div class="form-horizontal">
+				<!-- Include Select2 CSS -->
+				<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+				<style>
+					/* Set the height of the Select2 container */
+					.select2-container .select2-selection--single {
+						height: 45px; /* Change to desired height */
+					}
 
+					/* Center the text vertically */
+					.select2-container--default .select2-selection--single .select2-selection__rendered {
+						line-height: 35px; /* Match this to the height above */
+					}
+
+					/* Adjust the arrow */
+					.select2-container--default .select2-selection--single .select2-selection__arrow {
+						height: 45px;
+					}
+				</style>
 				<!-- First Card -->
 				<div class="mb-4">
 					<div class="card card-default">
@@ -46,6 +63,7 @@
 								</div>
 								<div class="col-md-9">
 									<nop-select asp-for="SupplierId" asp-items="Model.AvailableSuppliers" />
+									<input type="hidden" id="HiddenSupplierId" name="SupplierId" value="@Model.SupplierId" />
 									<span asp-validation-for="SupplierId"></span>
 								</div>
 							</div>
@@ -100,13 +118,28 @@
 									success: function (html) {
 										$('#purchaseorderitems-container').html(html);
 
-										// After loading partial view, check item count
 										const itemCount = parseInt($('#purchase-order-item-count').val() || "0");
+										const supplierId = $('#SupplierId').val();
 
 										if (itemCount > 0) {
+											// Disable dropdown and set hidden input value
 											$('#SupplierId').attr('disabled', 'disabled');
+
+											// Set or update hidden input with the selected value
+											if ($('#HiddenSupplierId').length === 0) {
+												$('<input>').attr({
+													type: 'hidden',
+													id: 'HiddenSupplierId',
+													name: 'SupplierId',
+													value: supplierId
+												}).appendTo('#purchaseorder-form');
+											} else {
+												$('#HiddenSupplierId').val(supplierId);
+											}
 										} else {
+											// Enable dropdown and remove hidden input
 											$('#SupplierId').removeAttr('disabled');
+											$('#HiddenSupplierId').remove();
 										}
 									},
 									error: function (xhr) {
@@ -123,6 +156,7 @@
 
 									$.ajax({
 										url: '@Url.Action("DeletePurchaseOrderItem", "PurchaseOrder")',
+										/* url: '@Url.Action("DeletePurchaseOrderItemInEdit", "PurchaseOrder")',*/
 										type: 'POST',
 										data: { productId: productId },
 										success: function (response) {
@@ -160,7 +194,18 @@
 									});
 								});
 							</script>
+							<!-- Include Select2 JS -->
+							<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+							<script>
+								$(document).ready(function () {
+									$('#SupplierId').select2({
+										width: '100%',
+										placeholder: 'Select a supplier',
+										allowClear: true
+									});
+								});
+							</script>
 						</div>
 					</div>
 				</div>

@@ -204,6 +204,11 @@ public class PurchaseOrderController : BasePluginController
 
         foreach (var product in purchaseOrderProducts)
         {
+            await _purchaseOrderService.UpdateProductStockQuantity(new ProductModel
+            {
+                Id = product.ProductId,
+                StockQuantity = -product.Quantity
+            });
             await _purchaseOrderService.DeletePurchaseOrderProductAsync(product);
         }
 
@@ -284,6 +289,26 @@ public class PurchaseOrderController : BasePluginController
         var itemToRemove = items.FirstOrDefault(x => x.ProductId == productId);
         if (itemToRemove != null)
         {
+            items.Remove(itemToRemove);
+            _purchaseOrderService.SaveSessionItems(items);
+        }
+
+        return Json(new { success = true });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeletePurchaseOrderItemInEdit(int productId)
+    {
+        var items = _purchaseOrderService.GetSessionItems();
+        await _purchaseOrderService.ClearSessionItems();
+        var itemToRemove = items.FirstOrDefault(x => x.ProductId == productId);
+        if (itemToRemove != null)
+        {
+            await _purchaseOrderService.UpdateProductStockQuantity(new ProductModel
+            {
+                Id = itemToRemove.ProductId,
+                StockQuantity = -itemToRemove.Quantity
+            });
             items.Remove(itemToRemove);
             _purchaseOrderService.SaveSessionItems(items);
         }
