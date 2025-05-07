@@ -1,0 +1,10 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Subscription Manager",
+  "SystemName": "Misc.SubscriptionManager",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "Bs23_anik",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.SubscriptionManager.dll"
+}

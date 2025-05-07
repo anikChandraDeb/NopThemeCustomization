@@ -15,6 +15,7 @@ using Nop.Services.Security;
 using Nop.Web.Areas.Admin.Models.Catalog;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Models.DataTables;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Controllers;
@@ -255,11 +256,42 @@ public class PurchaseOrderController : BasePluginController
     }
 
 
-    public async Task<IActionResult> GetOrderItems()
+    public async Task<IActionResult> GetOrderItems(PurchaseOrderItemSearchModel searchModel)
     {
-        var items = _purchaseOrderService.GetSessionItems(); 
+        var items = _purchaseOrderService.GetSessionItems();
+        
+        var model = await _purchaseOrderModelFactory.PreparePurchaseOrderItemListModelAsync(items, searchModel);
+        return Json(model);
+        //return Json(items);
+    }
+    [HttpPost]
+    public async Task<IActionResult> PurchaseOrderItemUpdate(PurchaseOrderItemModel model)
+    {
+        var items = _purchaseOrderService.GetSessionItems();
+        var item = items?.FirstOrDefault(x => x.ProductId == model.ProductId);
+        if (item != null)
+        {
+            item.Quantity = model.Quantity;
+            item.UnitCost = model.UnitCost;
+            item.LineTotal = model.Quantity * model.UnitCost;
+        }
+        _purchaseOrderService.SaveSessionItems(items);
 
-        return Json(items);
+        return new NullJsonResult();
+    }
+    [HttpPost]
+    public async Task<IActionResult> PurchaseOrderItemDelete(int id)
+    {
+        var items = _purchaseOrderService.GetSessionItems();
+        await _purchaseOrderService.ClearSessionItems();
+        var itemToRemove = items.FirstOrDefault(x => x.ProductId == id);
+        if (itemToRemove != null)
+        {
+            items.Remove(itemToRemove);
+            _purchaseOrderService.SaveSessionItems(items);
+        }
+
+        return new NullJsonResult();
     }
 
     [HttpGet]

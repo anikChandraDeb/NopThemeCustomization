@@ -1,190 +1,100 @@
-﻿@using Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
-@model PurchaseOrderModel
+﻿@model PurchaseOrderModel
 
-
-@if (Model.Items.Count > 0)
+<div class="card-body">
+	<div class="card card-default">
+		<div class="card-body">
+			@await Html.PartialAsync("Table", new DataTablesModel
 {
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card card-default">
-					<div class="card-body table-responsive">
-						<table class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th>@T("Admin.PurchaseOrders.Fields.Product")</th>
-									<th>@T("Admin.PurchaseOrders.Fields.Sku")</th>
-									<th class="text-center">@T("Admin.PurchaseOrders.Fields.Quantity")</th>
-									<th class="text-center">@T("Admin.PurchaseOrders.Fields.UnitCost")</th>
-									<th class="text-center">@T("Admin.PurchaseOrders.Fields.LineTotal")</th>
-									<th class="text-center">@T("Admin.Common.Edit")</th>
-									<th class="text-center">@T("Admin.Common.Delete")</th>
-								</tr>
-							</thead>
-							<tbody>
-								@for (int i = 0; i < Model.Items.Count; i++)
-								{
-									<tr>
-										<td>
-											@Model.Items[i].ProductName
-											<input type="hidden" id="purchase-order-item-count" value="@Model.Items.Count" />
-
-											<input type="hidden" name="Items[@i].Id" value="@Model.Items[i].Id" />
-											<input type="hidden" name="Items[@i].ProductName" value="@Model.Items[i].ProductName" />
-											<input type="hidden" class="product-id" name="Items[@i].ProductId" value="@Model.Items[i].ProductId" />
-										</td>
-										<td>
-											@Model.Items[i].Sku
-											<input type="hidden" name="Items[@i].Sku" value="@Model.Items[i].Sku" />
-										</td>
-										<td class="text-center">
-											<span class="view-mode">@Model.Items[i].Quantity</span>
-											<input type="number" name="Items[@i].Quantity" value="@Model.Items[i].Quantity" class="form-control edit-mode d-none quantity-input" data-index="@i" />
-										</td>
-										<td class="text-center">
-											<span class="view-mode">@Model.Items[i].UnitCost.ToString("F2")</span>
-											<input type="number" name="Items[@i].UnitCost" value="@Model.Items[i].UnitCost" class="form-control edit-mode d-none unitcost-input" data-index="@i" />
-										</td>
-										<td class="text-center">
-											<span class="line-total" id="LineTotal_@i">@Model.Items[i].LineTotal.ToString("F2")</span>
-										</td>
-										<td class="text-center">
-											<div class="view-mode">
-												<button type="button" class="btn btn-primary btn-sm edit-item" style="background:#F4F4F4;color: black;"><i class="fa fa-pencil"></i>Edit</button>
-											</div>
-											<div class="edit-mode d-none">
-												<button type="button" class="btn btn-primary btn-sm update-item" data-index="@i" style="background:#F4F4F4;color: black;">✔ Update</button>
-												<button type="button" class="btn btn-primary btn-sm cancel-edit" style="background:#F4F4F4;color: black;">✖ Cancel</button>
-											</div>
-										</td>
-										<td class="text-center">
-											<button type="button" class="btn btn-primary btn-sm delete-item" data-id="@Model.Items[i].ProductId" style="background:#F4F4F4;color: black;"><i class="fa fa-trash"></i>Delete</button>
-										</td>
-									</tr>
-								}
-
-
-							</tbody>
-						</table>
-					</div>
-					<div class="card-footer">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group row">
-									<div class="col-md-6">
-										<label>@T("Admin.PurchaseOrders.Fields.TotalAmount")</label>
-									</div>
-									<div class="col-md-6">
-										<div class="form-text-row">
-											<span id="TotalAmountDisplay">@Model.TotalAmount.ToString("F2")</span>
-											<input type="hidden" asp-for="TotalAmount" />
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
+	Name = "purchaseorderitems-grid",
+	UrlRead = new DataUrl("GetOrderItems", "PurchaseOrder", new RouteValueDictionary
+	{
+		["Keyword"] = Model.PurchaseOrderItemSearchModel.Keyword
+	}),
+	UrlDelete = new DataUrl("PurchaseOrderItemDelete", "PurchaseOrder", null),
+	UrlUpdate = new DataUrl("PurchaseOrderItemUpdate", "PurchaseOrder", null),
+	Length = 100,
+	ColumnCollection = new List<ColumnProperty>
+			{
+			new ColumnProperty(nameof(PurchaseOrderItemModel.ProductName))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.Product").Text
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.Sku))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.Sku").Text
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.Quantity))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.Quantity").Text,
+			Editable = true,
+			EditType = EditType.Number,
+			ClassName = NopColumnClassDefaults.CenterAll
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.UnitCost))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.UnitCost").Text,
+			Editable = true,
+			EditType = EditType.Number,
+			ClassName = NopColumnClassDefaults.CenterAll
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.LineTotal))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.LineTotal").Text,
+			ClassName = NopColumnClassDefaults.CenterAll
+			}
+			,
+			new ColumnProperty(nameof(PurchaseOrderItemModel.Id))
+			{
+			Title = T("Admin.Common.Edit").Text,
+			Width = "150",
+			ClassName = NopColumnClassDefaults.Button,
+			Render = new RenderButtonsInlineEdit()
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.ProductId))
+			{
+			Title = T("Admin.Common.Delete").Text,
+			Width = "100",
+			Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+			ClassName = NopColumnClassDefaults.Button
+			},
+			new ColumnProperty(nameof(PurchaseOrderItemModel.ProductId))
+			{
+			Title = T("Admin.PurchaseOrders.Fields.ProductId").Text,
+			Editable = true,
+			EditType = EditType.Number,
+			ClassName = "d-none"
+			}
+			}
+})
 		</div>
 	</div>
-}
-else
-{
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-12">
-				<h4>No Products Selected..</h4>
-			</div>
-		</div>
-	</div>
-}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</div>
+<tfoot>
+	<tr>
+		<th colspan="4" style="text-align:right">@T("Admin.PurchaseOrders.Fields.TotalAmount"):</th>
+		<th id="total-amount-footer" style="text-align:center"></th>
+		<th colspan="2">
+			<input type="hidden" asp-for="TotalAmount" id="TotalAmount" />
+			<span id="total-amount-span" style="font-weight:bold;"></span>
+		</th>
+	</tr>
+</tfoot>
 
 <script>
 	$(document).ready(function () {
-		let originalValues = {};
+		const table = $('#purchaseorderitems-grid').DataTable();
 
-		// Edit
-		$('.edit-item').on('click', function () {
-			const $row = $(this).closest('tr');
-			const index = $row.find('.quantity-input').data('index');
+		table.on('draw', function () {
+			let total = 0;
+			table.column(4, { page: 'current' }).nodes().each(function (cell) {
+				let value = parseFloat($(cell).text()) || 0;
+				total += value;
+			});
 
-			originalValues[index] = {
-				quantity: $row.find('.quantity-input').val(),
-				unitCost: $row.find('.unitcost-input').val()
-			};
-
-			$row.find('.quantity-view, .unitcost-view').addClass('d-none');
-			$row.find('.quantity-input, .unitcost-input').removeClass('d-none');
-			$row.find('.view-mode').addClass('d-none');
-			$row.find('.edit-mode').removeClass('d-none');
-
-
+			const formattedTotal = total.toFixed(2);
+			$('#total-amount-footer').text(formattedTotal);
+			$('#TotalAmount').val(formattedTotal);
+			$('#total-amount-span').text(formattedTotal);
 		});
-
-		// Cancel
-		$('.cancel-edit').on('click', function () {
-			const $row = $(this).closest('tr');
-			const index = $(this).data('index');
-
-			if (originalValues[index]) {
-				$row.find('.quantity-input').val(originalValues[index].quantity);
-				$row.find('.unitcost-input').val(originalValues[index].unitCost);
-			}
-
-			$row.find('.quantity-view, .unitcost-view').removeClass('d-none');
-			$row.find('.quantity-input, .unitcost-input').addClass('d-none');
-			$row.find('.edit-mode').addClass('d-none');
-			$row.find('.view-mode').removeClass('d-none');
-		});
-
-			$('.update-item').on('click', function () {
-		const $row = $(this).closest('tr');
-		const index = $(this).data('index');
-		const productId = $row.find('.product-id').val();
-
-		console.log("ProductId:", productId); // Debug
-
-		const quantity = parseFloat($row.find('.quantity-input').val()) || 0;
-		const unitCost = parseFloat($row.find('.unitcost-input').val()) || 0;
-
-		$.ajax({
-			url: '@Url.Action("UpdatePurchaseOrderItem", "PurchaseOrder")',
-			type: 'POST',
-			data: {
-				productId: productId,
-				quantity: quantity,
-				unitCost: unitCost
-			},
-			success: function (response) {
-				console.log("Response:", response);
-				if (response.success) {
-					// const lineTotal = (quantity * unitCost).toFixed(2);
-
-					// $row.find('.quantity-view').text(quantity);
-					// $row.find('.unitcost-view').text(unitCost.toFixed(2));
-					// $row.find('.line-total').text(lineTotal);
-
-					// $row.find('.quantity-view, .unitcost-view').removeClass('d-none');
-					// $row.find('.quantity-input, .unitcost-input').addClass('d-none');
-					// $row.find('.edit-mode').addClass('d-none');
-					// $row.find('.view-mode').removeClass('d-none');
-					refreshPurchaseOrderItems();
-				} else {
-					alert("Update failed.");
-				}
-			},
-			error: function () {
-				alert("Server error. Try again.");
-			}
-		});
-	});
-
 	});
 </script>
-
-
-

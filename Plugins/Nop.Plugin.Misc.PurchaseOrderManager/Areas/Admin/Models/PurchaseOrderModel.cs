@@ -31,6 +31,8 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
         public int CreatedById { get; set; }
         public IList<PurchaseOrderItemModel> Items { get; set; }
         public AddProductToPurchaseOrderSearchModel? AddProductSearchModel { get; set; }
+
+        public PurchaseOrderItemSearchModel PurchaseOrderItemSearchModel { get; set; } = new();
     }
 
     public record PurchaseOrderItemModel : BaseNopEntityModel
@@ -46,6 +48,10 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Models
 
     public record PurchaseOrderItemListModel: BasePagedListModel<PurchaseOrderItemModel>
     {
+    }
+    public record PurchaseOrderItemSearchModel : BaseSearchModel
+    {
+        public string Keyword { get; set; }
     }
 
     public record AddProductToPurchaseOrderSearchModel : BaseSearchModel

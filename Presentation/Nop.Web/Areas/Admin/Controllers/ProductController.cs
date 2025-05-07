@@ -1434,7 +1434,7 @@ public partial class ProductController : BaseAdminController
     [CheckPermission(StandardPermission.Catalog.PRODUCTS_VIEW)]
     public virtual async Task<IActionResult> RelatedProductList(RelatedProductSearchModel searchModel)
     {
-        //try to get a product with the specified id
+        //try to get a product with the specified idRelatedProductUpdate
         var product = await _productService.GetProductByIdAsync(searchModel.ProductId)
             ?? throw new ArgumentException("No product found with the specified id");
 

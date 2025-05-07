@@ -304,6 +304,52 @@ namespace Nop.Plugin.Misc.PurchaseOrderManager.Areas.Admin.Factories
 
             return model;
         }
+        public async Task<PurchaseOrderItemListModel> PreparePurchaseOrderItemListModelAsync(IList<PurchaseOrderItemModel> items,PurchaseOrderItemSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            // Paging
+            var pagedItems = new PagedList<PurchaseOrderItemModel>(
+                items.Skip((searchModel.Page - 1) * searchModel.PageSize).Take(searchModel.PageSize).ToList(),
+                searchModel.Page - 1,
+                searchModel.PageSize,
+                items.Count
+            );
+
+            // Mapping to model
+            var itemModels = await pagedItems.SelectAwait(async item =>
+            {
+                var model = new PurchaseOrderItemModel
+                {
+                    Id = item.Id,
+                    ProductName = item.ProductName,
+                    Sku = item.Sku,
+                    ProductId=item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitCost = item.UnitCost,
+                    LineTotal = item.Quantity * item.UnitCost
+                };
+
+                return model;
+            }).ToListAsync();
+
+            var pagedItemModels = new PagedList<PurchaseOrderItemModel>(
+                itemModels,
+                pagedItems.PageIndex,
+                pagedItems.PageSize,
+                pagedItems.TotalCount
+            );
+
+            // Prepare the final grid model
+            var model = await new PurchaseOrderItemListModel().PrepareToGridAsync(
+                searchModel,
+                pagedItemModels,
+                () => pagedItemModels.ToAsyncEnumerable()
+            );
+
+            return model;
+        }
 
     }
 }

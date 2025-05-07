@@ -183,17 +183,90 @@
 							</script>
 
 							<script>
-								$(document).ready(function() {
-									$('#purchaseorder-form').on('submit', function(e) {
-										var validator = $(this).validate();
-										console.log('Form valid:', validator.valid());
+								$('#purchaseorder-form').on('submit', function (e) {
+									// Clear previous hidden inputs
+									$('input[name^="Items["]').remove();
 
-										$.each(validator.errorList, function() {
-											console.log('Error:', this.message, 'on element:', this.element);
-										});
-									});
+									let table = $('#purchaseorderitems-grid').DataTable();
+									let data = table.rows().data().toArray();
+
+									for (let i = 0; i < data.length; i++) {
+										let item = data[i];
+
+										console.log(`Item ${i}:`, item); // Log entire item object
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].ProductId`,
+											value: item.ProductId
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].ProductName`,
+											value: item.ProductName
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].Sku`,
+											value: item.Sku
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].Quantity`,
+											value: item.Quantity
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].UnitCost`,
+											value: item.UnitCost
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].LineTotal`,
+											value: item.LineTotal
+										}).appendTo('#purchaseorder-form');
+
+										$('<input>').attr({
+											type: 'hidden',
+											name: `Items[${i}].Id`,
+											value: item.Id
+										}).appendTo('#purchaseorder-form');
+									}
 								});
 							</script>
+
+							<script>
+								function updateSupplierDropdownState() {
+									const table = $('#purchaseorderitems-grid').DataTable();
+									const itemCount = table.rows().count();
+									const supplierId = $('#SupplierId').val();
+
+									if (itemCount > 0) {
+										$('#SupplierId').attr('disabled', 'disabled');
+										if ($('#HiddenSupplierId').length === 0) {
+											$('<input>').attr({
+												type: 'hidden',
+												id: 'HiddenSupplierId',
+												name: 'SupplierId',
+												value: supplierId
+											}).appendTo('#purchaseorder-form');
+										}
+									} else {
+										$('#SupplierId').removeAttr('disabled');
+										$('#HiddenSupplierId').remove();
+									}
+								}
+
+								$(document).on('draw.dt', '#purchaseorderitems-grid', function () {
+									updateSupplierDropdownState();
+								});
+							</script>
+
 							<!-- Include Select2 JS -->
 							<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

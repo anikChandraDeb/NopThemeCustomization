@@ -15,4 +15,5 @@ public interface IPurchaseOrderModelFactory
     Task<AddProductToPurchaseOrderSearchModel> PrepareAddProductPopupModelAsync(int supplierId);
     Task<IList<PurchaseOrderItemModel>> PrepareTempOrderItemsAsync(AddProductsRequest request);
     Task<PurchaseOrderModel> PreparePurchaseOrderModelAsync(int id);
+    Task<PurchaseOrderItemListModel> PreparePurchaseOrderItemListModelAsync(IList<PurchaseOrderItemModel> items, PurchaseOrderItemSearchModel searchModel);
 }
